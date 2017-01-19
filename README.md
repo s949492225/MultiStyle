@@ -1,7 +1,7 @@
 # MultiStyle
 一个支持多种item类型的recycleView依赖注入库
 
-1.通过注解的方式方便的注入到recycleView中。
+1.通过注解的方式方便的把ViewHolder注入到recycleView中。
 
 2.去除findViewByID等冗余操作。
 
