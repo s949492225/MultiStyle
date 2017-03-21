@@ -26,7 +26,7 @@ public class MultiStyle {
      * 仅能在RecycleView中使用
      */
     public abstract static class ViewHolder extends RecyclerView.ViewHolder {
-        private View mContentView;
+        protected View mContentView;
         protected Context mContext;
         protected Activity mActivity;
         protected Fragment mFragment;
