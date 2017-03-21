@@ -1,1 +1,2 @@
-include ':app', ':library', ':library:process', ":library:annotation"
+include ':sample', ':multistyle-annotations', ':multistyle-compile', ':multistyle'
+rootProject.name = 'multistyle-parent'

@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MultiStyle.iml" filepath="$PROJECT_DIR$/MultiStyle.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/annotation/annotation.iml" filepath="$PROJECT_DIR$/library/annotation/annotation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/process/process.iml" filepath="$PROJECT_DIR$/library/process/process.iml" />
+      <module fileurl="file://$PROJECT_DIR$/multistyle/multistyle.iml" filepath="$PROJECT_DIR$/multistyle/multistyle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/multistyle-annotations/multistyle-annotations.iml" filepath="$PROJECT_DIR$/multistyle-annotations/multistyle-annotations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/multistyle-compile/multistyle-compile.iml" filepath="$PROJECT_DIR$/multistyle-compile/multistyle-compile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/multistyle-parent.iml" filepath="$PROJECT_DIR$/multistyle-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>
 </project>
