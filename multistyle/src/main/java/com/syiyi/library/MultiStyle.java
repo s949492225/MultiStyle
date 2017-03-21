@@ -5,8 +5,10 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -146,9 +148,17 @@ public class MultiStyle {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             try {
-                return (RecyclerView.ViewHolder) mMethodCreate.invoke(null, parent, viewType);
+                ViewHolder holder = (ViewHolder) mMethodCreate.invoke(null, parent, viewType);
+                if (holder == null) {
+                    ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(mContext).inflate(R.layout.holder_error, parent));
+                    errorHolder.setErrorId(viewType);
+                    return errorHolder;
+                }
+                return holder;
             } catch (Exception e) {
-                return null;
+                ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(mContext).inflate(R.layout.holder_error, parent));
+                errorHolder.setException(e);
+                return errorHolder;
             }
         }
 
