@@ -1,7 +1,6 @@
 package com.syiyi.multistyle.holder;
 
 import android.view.View;
-
 import com.syiyi.annotation.Holder;
 import com.syiyi.library.MultiStyle;
 import com.syiyi.multistyle.MainActivity;
@@ -12,7 +11,7 @@ import com.syiyi.multistyle.R;
  * Created by songlintao on 2017/1/19.
  */
 
-@Holder
+@Holder("fndsa")
 public class ImageHolder extends MultiStyle.ViewHolder {
 
     public ImageHolder(View itemView) {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import com.syiyi.holder.H;
 import com.syiyi.library.MultiStyle;
 import com.syiyi.library.ViewHelper;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     static List<Content> DATA = new ArrayList<>();
     static final int TYPE_TEXT = H.id.TextHolder_com_syiyi_multistyle_holder;
     static final int TYPE_IMAGE = H.id.ImageHolder_com_syiyi_multistyle_holder;
@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        Pair<Integer, Integer> pair=new Pair<>(0,100);
+        Integer a=new Integer(1);
         setContentView(R.layout.activity_main);
         ViewHelper mHelper = new ViewHelper(this.getWindow().getDecorView().findViewById(android.R.id.content), this);
         RecyclerView list = mHelper.getView(R.id.list);
