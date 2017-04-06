@@ -29,7 +29,7 @@ public class ImageHolder extends MultiStyle.ViewHolder {
     }
 
     @Override
-    public void renderView(MultiStyle.IProxy proxy, int pos, MultiStyle.OnClickListener listener) {
+    public void renderView(MultiStyle.IProxy proxy, int pos, MultiStyle.OnActionListener listener) {
         MainActivity.Content item = (MainActivity.Content) proxy.getItem(pos);
 //        ImageView image = mHelper.getView(R.id.image);
 //        Glide.with(mHelper.getContext()).load(item.getContent()).into(image);

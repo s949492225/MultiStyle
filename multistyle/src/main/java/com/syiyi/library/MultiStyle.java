@@ -20,8 +20,10 @@ import java.util.List;
  */
 public class MultiStyle {
 
-    public interface OnClickListener {
+    public interface OnActionListener {
         void onClick(View view, int pos, IProxy proxy, Object... extras);
+
+        void onLongClick(View view, int pos, IProxy proxy, Object... extras);
     }
 
     /**
@@ -59,7 +61,7 @@ public class MultiStyle {
 
         public abstract void clearView();
 
-        public abstract void renderView(IProxy proxy, int pos, OnClickListener listener);
+        public abstract void renderView(IProxy proxy, int pos, OnActionListener listener);
 
     }
 
@@ -112,7 +114,7 @@ public class MultiStyle {
     public static class RecycleViewAdapter extends RecyclerView.Adapter {
         protected Context mContext;
         private IProxy mProxy;
-        private OnClickListener mListener;
+        private OnActionListener mListener;
         private int mDefaultHolderId = -100000;
         private Activity mActivity;
         private Fragment mFragment;
@@ -191,7 +193,7 @@ public class MultiStyle {
             return mDefaultHolderId == -100000 ? mProxy.getItemViewType(position) : mDefaultHolderId;
         }
 
-        public void setOnClickListener(OnClickListener listener) {
+        public void setOnClickListener(OnActionListener listener) {
             mListener = listener;
         }
 

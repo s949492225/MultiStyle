@@ -29,7 +29,7 @@ public class TextHolder extends MultiStyle.ViewHolder {
     }
 
     @Override
-    public void renderView(MultiStyle.IProxy proxy, int pos, MultiStyle.OnClickListener listener) {
+    public void renderView(MultiStyle.IProxy proxy, int pos, MultiStyle.OnActionListener listener) {
         MainActivity.Content item = (MainActivity.Content) proxy.getItem(pos);
 //        mHelper.setText(R.id.text, item.getContent());
     }
