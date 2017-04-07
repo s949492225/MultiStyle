@@ -166,20 +166,26 @@ public class MultiStyle {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.setActivityOrFragment(mActivity, mFragment);
-            try {
-                viewHolder.clearView();
-                viewHolder.renderView(mProxy, position, mListener);
-            } catch (Exception e) {
-                if (BuildConfig.DEBUG) {
-                    Log.e("renderHolderError", viewHolder.getClass().getSimpleName() + ":" + e.getMessage());
+            if (holder instanceof ViewHolder) {
+                ViewHolder viewHolder = (ViewHolder) holder;
+                viewHolder.setActivityOrFragment(mActivity, mFragment);
+                try {
+                    viewHolder.clearView();
+                    viewHolder.renderView(mProxy, position, mListener);
+                } catch (Exception e) {
+                    if (BuildConfig.DEBUG) {
+                        Log.e("renderHolderError", viewHolder.getClass().getSimpleName() + ":" + e.getMessage());
+                    }
                 }
             }
         }
 
         public void setDefaultHolderId(int holderId) {
             mDefaultHolderId = holderId;
+        }
+
+        public void setDefaultHolderName(String holderName) {
+            mDefaultHolderId = Integer.valueOf(holderName);
         }
 
         @Override
