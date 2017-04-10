@@ -17,12 +17,12 @@ class ErrorHolder extends RecyclerView.ViewHolder {
 
     void setErrorId(int id) {
         TextView tv = (TextView) itemView.findViewById(R.id.msg);
-        tv.setText("没有发现id==" + id + "的viewHolder");
+        tv.setText("no id found :" + id + "in H,please check it");
     }
 
     void setException(Exception e) {
         TextView tv = (TextView) itemView.findViewById(R.id.msg);
-        tv.setText("create holder error \r\n" + e.getMessage()+"");
+        tv.setText("create holder error \r\n" + e.getMessage() + "");
     }
 
 

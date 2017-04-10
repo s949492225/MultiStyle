@@ -1,11 +1,13 @@
 package com.syiyi.multistyle.holder;
 
 import android.view.View;
+import android.widget.EditText;
 
 import com.syiyi.annotation.Holder;
 import com.syiyi.library.MultiStyle;
-import com.syiyi.multistyle.MainActivity;
 import com.syiyi.multistyle.R;
+
+import java.util.List;
 
 /**
  * text
@@ -13,6 +15,7 @@ import com.syiyi.multistyle.R;
  */
 @Holder
 public class TextHolder extends MultiStyle.ViewHolder {
+    private EditText text;
 
     public TextHolder(View itemView) {
         super(itemView);
@@ -25,12 +28,17 @@ public class TextHolder extends MultiStyle.ViewHolder {
 
     @Override
     public void clearView() {
+        text = (EditText) itemView.findViewById(R.id.et);
+        text.setText(null);
+    }
+
+    @Override
+    public void renderView(MultiStyle.MultiStyleAdapter adapter, int position, List<Object> payloads, MultiStyle.OnActionListener mListener) {
 
     }
 
     @Override
-    public void renderView(MultiStyle.IProxy proxy, int pos, MultiStyle.OnActionListener listener) {
-        MainActivity.Content item = (MainActivity.Content) proxy.getItem(pos);
-//        mHelper.setText(R.id.text, item.getContent());
+    public boolean shouldSaveViewState() {
+        return true;
     }
 }
