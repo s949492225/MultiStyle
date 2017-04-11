@@ -55,19 +55,19 @@ class ViewHolderState extends LongSparseArray<ViewHolderState.ViewState> impleme
   };
 
 
-  public boolean hasStateForHolder(MultiStyle.ViewHolder holder) {
+  public boolean hasStateForHolder(MultiStyleHolder holder) {
     return get(holder.getItemId()) != null;
   }
 
 
-  public void save(Collection<MultiStyle.ViewHolder> holders) {
-    for (MultiStyle.ViewHolder holder : holders) {
+  public void save(Collection<MultiStyleHolder> holders) {
+    for (MultiStyleHolder holder : holders) {
       save(holder);
     }
   }
 
   /** Save the state of the view bound to the given holder. */
-  public void save(MultiStyle.ViewHolder holder) {
+  public void save(MultiStyleHolder holder) {
     if (!holder.shouldSaveViewState()) {
       return;
     }
@@ -92,7 +92,7 @@ class ViewHolderState extends LongSparseArray<ViewHolderState.ViewState> impleme
    * If a state was previously saved for this view holder via {@link #save} it will be restored
    * here.
    */
-  public void restore(MultiStyle.ViewHolder holder) {
+  public void restore(MultiStyleHolder holder) {
     if (!holder.shouldSaveViewState()) {
       return;
     }

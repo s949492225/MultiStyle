@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.TextView;
 
 /**
- * 未知id提示的holder
- * Created by Dell on 2017/3/21.
+ * it will show when no id found in H
+ * Created by syiyi on 2017/3/21.
  */
 
 class ErrorHolder extends RecyclerView.ViewHolder {

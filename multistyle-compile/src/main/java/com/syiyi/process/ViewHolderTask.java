@@ -41,7 +41,7 @@ class ViewHolderTask extends BaseTask {
         mViewHolderHelperClassBuilder = TypeSpec.classBuilder("H")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         //通过id创建holder方法-----------------------------------------------------------
-        ClassName viewHolderType = ClassName.get("com.syiyi.library.MultiStyle", "ViewHolder");
+        ClassName viewHolderType = ClassName.get("com.syiyi.library", "MultiStyleHolder");
         ClassName paramViewGroup = ClassName.get("android.view", "ViewGroup");
         TypeVariableName returnType = TypeVariableName.get("T", viewHolderType);
         mMethodIdCreateHolderBuilder = MethodSpec.methodBuilder("createViewHolder")
@@ -100,7 +100,7 @@ class ViewHolderTask extends BaseTask {
                     + (getOutClassName(annotatedElement) == null ? "" : getOutClassName(annotatedElement).replace("_", ".")), holderClassName);
             mMethodIdCreateHolderBuilder
                     .beginControlFlow("else if(viewType == " + "id." + getFieldName(annotatedElement) + ")")
-                    .addStatement("ViewHolder temp = new $T(new $T(parent.getContext()))", classHolder, classView)
+                    .addStatement("MultiStyleHolder temp = new $T(new $T(parent.getContext()))", classHolder, classView)
                     .addStatement("return (T)new $T($T.from(parent.getContext()).inflate(temp.getLayoutId(), parent, false))", classHolder, classLayoutInflate)
                     .endControlFlow();
         }

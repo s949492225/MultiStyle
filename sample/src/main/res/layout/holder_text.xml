@@ -7,12 +7,7 @@
     <EditText
         android:id="@+id/et"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="#969393"
-        android:text="@string/text" />
-
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="45dp"
+        android:background="#96ff6d"
+        android:hint="请输入文字" />
 </LinearLayout>
