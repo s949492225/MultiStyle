@@ -111,6 +111,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
 
             if (payloads.isEmpty()) {
                 try {
+                    viewHolder.clearView();
                     viewHolderState.restore(viewHolder);
                     viewHolder.renderView(this, position, null, mListener);
                 } catch (Exception e) {
@@ -120,7 +121,6 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
                 }
             } else {
                 try {
-                    viewHolder.clearView();
                     viewHolderState.restore(viewHolder);
                     viewHolder.renderView(this, position, payloads, mListener);
                 } catch (Exception e) {
