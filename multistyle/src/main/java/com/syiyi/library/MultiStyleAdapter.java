@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +39,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private static Method mMethodCreate;
     private Map<String, Object> mTags = new HashMap<>();
     private List<T> mDatas = new ArrayList<>();
+
 
     static {
         try {
@@ -117,6 +117,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
                 }
             } else {
                 try {
+                    viewHolder.clearView();
                     viewHolderState.restore(viewHolder);
                     viewHolder.renderView(this, position, payloads, mListener);
                 } catch (Exception e) {
@@ -138,8 +139,6 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
         if (holder instanceof MultiStyleHolder) {
             MultiStyleHolder viewHolder = (MultiStyleHolder) holder;
-
-            viewHolder.clearView();
 
             viewHolderState.save(viewHolder);
             boundViewHolders.remove(viewHolder);
@@ -332,7 +331,6 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
         diffResult.dispatchUpdatesTo(this);
         mDatas = newDatas;
     }
-
 
     public void setTag(String key, Object value) {
         mTags.put(key, value);

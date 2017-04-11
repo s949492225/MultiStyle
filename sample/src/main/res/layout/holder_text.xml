@@ -9,5 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="#96ff6d"
+        android:focusableInTouchMode="true"
         android:hint="请输入文字" />
 </LinearLayout>
