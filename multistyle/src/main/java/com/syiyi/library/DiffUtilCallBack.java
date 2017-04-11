@@ -32,23 +32,23 @@ public class DiffUtilCallBack<T extends MultiViewModel> extends DiffUtil.Callbac
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        MultiViewModel oldModel = mOldDatas.get(oldItemPosition);
-        MultiViewModel newModel = mNewDatas.get(newItemPosition);
+        T oldModel = mOldDatas.get(oldItemPosition);
+        T newModel = mNewDatas.get(newItemPosition);
         return oldModel.areItemsTheSame(newModel) ;
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        MultiViewModel oldModel = mOldDatas.get(oldItemPosition);
-        MultiViewModel newModel = mNewDatas.get(newItemPosition);
+        T oldModel = mOldDatas.get(oldItemPosition);
+        T newModel = mNewDatas.get(newItemPosition);
         return oldModel.areContentsTheSame(newModel);
     }
 
     @Nullable
     @Override
     public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-        MultiViewModel oldModel = mOldDatas.get(oldItemPosition);
-        MultiViewModel newModel = mNewDatas.get(newItemPosition);
+        T oldModel = mOldDatas.get(oldItemPosition);
+        T newModel = mNewDatas.get(newItemPosition);
         return oldModel.getChangePayload(newModel);
     }
 }

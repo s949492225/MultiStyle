@@ -50,4 +50,5 @@ public class TextHolder extends MultiStyleHolder {
     public boolean shouldSaveViewState() {
         return true;
     }
+
 }

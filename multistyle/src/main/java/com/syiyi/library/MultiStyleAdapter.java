@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ import java.util.Map;
 public abstract class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "MultiStyleRecycleSaveInstance";
-    private static final String TAG = "multiStyle";
+    static final String TAG = "multiStyle";
     private static final String CLASS = "com.syiyi.holder.H";
     private static final String METHOD = "createViewHolder";
     protected Context mContext;
@@ -39,7 +38,11 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private static Method mMethodCreate;
     private Map<String, Object> mTags = new HashMap<>();
     private List<T> mDatas = new ArrayList<>();
+    static boolean enableDebug = false;
 
+    public static void setDebug(boolean enableDebug) {
+        MultiStyleAdapter.enableDebug = enableDebug;
+    }
 
     static {
         try {
@@ -100,7 +103,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         long startTime = 0;
-        if (BuildConfig.DEBUG) {
+        if (enableDebug) {
             startTime = System.currentTimeMillis();
         }
         if (holder instanceof MultiStyleHolder) {
@@ -111,7 +114,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
                     viewHolderState.restore(viewHolder);
                     viewHolder.renderView(this, position, null, mListener);
                 } catch (Exception e) {
-                    if (BuildConfig.DEBUG) {
+                    if (enableDebug) {
                         Log.e(TAG, "renderViewError:" + viewHolder.getClass().getSimpleName() + ":" + e.getMessage());
                     }
                 }
@@ -121,7 +124,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
                     viewHolderState.restore(viewHolder);
                     viewHolder.renderView(this, position, payloads, mListener);
                 } catch (Exception e) {
-                    if (BuildConfig.DEBUG) {
+                    if (enableDebug) {
                         Log.e(TAG, "renderViewPlayLoadError:" + viewHolder.getClass().getSimpleName() + ":" + e.getMessage());
                     }
                 }
@@ -129,8 +132,8 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
 
             boundViewHolders.put(viewHolder);
 
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "onBindViewHolder: " + position + ">>" + (System.currentTimeMillis() - startTime) + ">>" + holder.getClass().getSimpleName());
+            if (enableDebug) {
+                Log.d(TAG, "onBindViewHolder: pos>>" + position + "time>>" + (System.currentTimeMillis() - startTime) + ">>" + holder.getClass().getSimpleName());
             }
         }
     }
@@ -214,7 +217,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     @Override
     public int getItemViewType(int position) {
         int type;
-        MultiViewModel viewModel = getItem(position);
+        T viewModel = getItem(position);
         try {
             type = viewModel.getViewTypeId();
             if (type == -1) {
@@ -231,106 +234,15 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
         mListener = listener;
     }
 
-
-    @NonNull
-    private List<T> createNewDatas() {
-        List<T> temp = new ArrayList<>();
-        temp.addAll(mDatas);
-        return temp;
+    public List<T> getDataSource() {
+        return mDatas;
     }
 
-    public void setList(@NonNull List<T> datas) {
+    public void setDataSource(List<T> datas) {
         mDatas.clear();
-        insertList(datas);
+        mDatas.addAll(datas);
     }
 
-    public void insertList(@NonNull List<T> datas) {
-        datas.addAll(0, mDatas);
-        notifyChange(datas);
-    }
-
-    public void insertList(int index, @NonNull List<T> datas) {
-        if (index < 0 || index > mDatas.size() - 1) return;
-        List<T> temp = createNewDatas();
-        temp.addAll(index, datas);
-        notifyChange(temp);
-    }
-
-    public void insertOne(@NonNull T data) {
-        List<T> temp = new ArrayList<>();
-        temp.add(data);
-        insertList(temp);
-    }
-
-    public void insertOne(int index, @NonNull T data) {
-        List<T> temp = new ArrayList<>();
-        temp.add(data);
-        insertList(index, temp);
-    }
-
-    public void removeList(int index, int count) {
-        if (mDatas.size() == 0 || index < 0 || index > mDatas.size() - 1 || index + count > mDatas.size()) {
-            return;
-        }
-        List<T> temp = createNewDatas();
-        List<T> del = new ArrayList<>();
-        int i = index;
-        for (; i < index + count; i++) {
-            del.add(temp.get(i));
-        }
-        temp.removeAll(del);
-        notifyChange(temp);
-    }
-
-    public void removeFirst() {
-        if (mDatas.size() == 0) return;
-        removeList(0, 1);
-    }
-
-    public void removeLast() {
-        if (mDatas.size() == 0)
-            return;
-        removeList(mDatas.size() - 1, 1);
-    }
-
-    public void updateList(@NonNull List<T> oldDatas, @NonNull List<T> newDatas) {
-        if (oldDatas.size() != newDatas.size() || oldDatas.size() == 0 || newDatas.size() == 0)
-            return;
-        List<T> temp = createNewDatas();
-        for (int i = 0; i < oldDatas.size(); i++) {
-            T oldData = oldDatas.get(i);
-            T newData = newDatas.get(i);
-            int index = temp.indexOf(oldData);
-            if (index == -1)
-                throw new RuntimeException("updateOne:" + "oldData not found in oldList");
-            temp.set(index, newData);
-        }
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(mDatas, temp), true);
-        diffResult.dispatchUpdatesTo(this);
-        for (int i = 0; i < oldDatas.size(); i++) {
-            T oldData = oldDatas.get(i);
-            T newData = newDatas.get(i);
-            oldData.resetPlayLoadData(newData);
-        }
-    }
-
-
-    public void updateOne(@NonNull T oldData, @NonNull T newData) {
-        List<T> temp = createNewDatas();
-        int index = temp.indexOf(oldData);
-        if (index == -1)
-            throw new RuntimeException("updateOne:" + "oldData not found in oldList");
-        temp.set(index, newData);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(mDatas, temp), true);
-        diffResult.dispatchUpdatesTo(this);
-        oldData.resetPlayLoadData(newData);
-    }
-
-    private void notifyChange(@NonNull List<T> newDatas) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(mDatas, newDatas), true);
-        diffResult.dispatchUpdatesTo(this);
-        mDatas = newDatas;
-    }
 
     public void setTag(String key, Object value) {
         mTags.put(key, value);

@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
 public class ViewHelper {
     private View mContentView;
     private Context mContext;
-    private ExecutorService workServices = Executors.newFixedThreadPool(2);
+    private ExecutorService workServices = Executors.newFixedThreadPool(1);
     private Handler mUIHandler;
     private SparseArray<View> mSubViews = new SparseArray<>();
 

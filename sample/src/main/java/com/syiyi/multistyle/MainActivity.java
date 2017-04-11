@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.syiyi.holder.H;
+import com.syiyi.library.DiffHelper;
 import com.syiyi.library.MultiStyleAdapter;
 import com.syiyi.library.MultiViewModel;
 import com.syiyi.library.ViewHelper;
@@ -52,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         DATA.add(new Content(TYPE_TEXT, "man"));
     }
 
-    private MultiStyleAdapter<Content> adapter;
+    private MultiStyleAdapter adapter;
+    private DiffHelper<Content> mDiffHelper;
     private Random random;
 
 
@@ -64,9 +67,24 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView list = mHelper.getView(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        adapter = new MultiStyleAdapter<Content>() {};
+        adapter = new MultiStyleAdapter() {};
+        mDiffHelper=new DiffHelper<>(adapter);
+        mDiffHelper.setOperationListener(new DiffHelper.OnOperationListener(){
+            @Override
+            public void onStart() {
+                Log.d("xxxxxxxx", "onStart: ");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d("xxxxxxxx", "onComplete: ");
+            }
+        });
+
+        MultiStyleAdapter.setDebug(true);
         list.setAdapter(adapter);
-        adapter.setList(DATA);
+        mDiffHelper.setList(DATA);
+
     }
 
     public void onClick(View view) {
@@ -80,14 +98,18 @@ public class MainActivity extends AppCompatActivity {
 
         Content c3 = new Content(TYPE_TEXT, "今天好" + random.nextInt(1000));
 
-//        List<Content> temp = new ArrayList<>();
+        List<Content> temp = new ArrayList<>();
 //        temp.add(c1);
 //        temp.add(c2);
+        for (int i=0;i<20;i++){
+            Content a = new Content(TYPE_TEXT, "今天天气真好"+random.nextInt(1000) + random.nextInt(1000));
+            temp.add(a);
+        }
 //        //insert
 //        adapter.insertOne(c1);
 //        adapter.insertOne(1,c1);
 //        adapter.insertList(temp);
-//        adapter.insertList(1,temp);
+        mDiffHelper.insertList(6,temp);
 //
 //        //remove
 //        adapter.removeList(0, 1);
@@ -96,22 +118,22 @@ public class MainActivity extends AppCompatActivity {
 //        adapter.removeFirst();
 //        adapter.removeLast();
 //
-        //update
-        List<Content> newList = new ArrayList<>();
-        newList.add(c1);
-        newList.add(c3);
-
-        //批量更新
-        List<Content> oldList = new ArrayList<>();
-        Content d1 = adapter.getItem(1);
-        c1.id = d1.id;
-        Content d2 = adapter.getItem(2);
-        c3.id = d2.id;
-
-        oldList.add(d1);
-        oldList.add(d2);
-
-        adapter.updateList(oldList, newList);
+//        //update
+//        List<Content> newList = new ArrayList<>();
+//        newList.add(c1);
+//        newList.add(c3);
+//
+//        //批量更新
+//        List<Content> oldList = new ArrayList<>();
+//        Content d1 = adapter.getItem(1);
+//        c1.id = d1.id;
+//        Content d2 = adapter.getItem(2);
+//        c3.id = d2.id;
+//
+//        oldList.add(d1);
+//        oldList.add(d2);
+//
+//        adapter.updateList(oldList, newList);
     }
 
     public static class Content implements MultiViewModel {
@@ -170,6 +192,11 @@ public class MainActivity extends AppCompatActivity {
         public void resetPlayLoadData(MultiViewModel newModel) {
             Content temp = (Content) newModel;
             content = temp.getContent();
+        }
+
+        @Override
+        public int hashCode() {
+            return id.hashCode();
         }
     }
 
