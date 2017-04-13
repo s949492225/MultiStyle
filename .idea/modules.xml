@@ -3,14 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/multistyle/multistyle.iml" filepath="$PROJECT_DIR$/multistyle/multistyle.iml" />
-      <module fileurl="file://$PROJECT_DIR$/multistyle/multistyle.iml" filepath="$PROJECT_DIR$/multistyle/multistyle.iml" />
-      <module fileurl="file://$PROJECT_DIR$/multistyle-annotations/multistyle-annotations.iml" filepath="$PROJECT_DIR$/multistyle-annotations/multistyle-annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/multistyle-annotations/multistyle-annotations.iml" filepath="$PROJECT_DIR$/multistyle-annotations/multistyle-annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/multistyle-compile/multistyle-compile.iml" filepath="$PROJECT_DIR$/multistyle-compile/multistyle-compile.iml" />
-      <module fileurl="file://$PROJECT_DIR$/multistyle-compile/multistyle-compile.iml" filepath="$PROJECT_DIR$/multistyle-compile/multistyle-compile.iml" />
       <module fileurl="file://$PROJECT_DIR$/multistyle-parent.iml" filepath="$PROJECT_DIR$/multistyle-parent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/multistyle-parent.iml" filepath="$PROJECT_DIR$/multistyle-parent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>
