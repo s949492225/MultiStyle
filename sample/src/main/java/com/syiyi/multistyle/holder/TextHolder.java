@@ -15,7 +15,7 @@ import java.util.List;
  * text
  * Created by songlintao on 2017/1/19.
  */
-@Holder
+@Holder("text")
 public class TextHolder extends MultiStyleHolder {
     private EditText text;
 
