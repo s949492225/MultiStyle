@@ -28,6 +28,7 @@ class ViewHolderTask extends BaseTask {
     private TypeSpec.Builder mNameClassBuilder;
     private MethodSpec.Builder mMethodIdCreateHolderBuilder;
     private MethodSpec.Builder mMethodNameCreateHolderBuilder;
+    private MethodSpec.Builder mMethodGetIdByNameBuilder;
     private boolean hasCreated;
     private int mMinId = 10000;
 
@@ -41,7 +42,7 @@ class ViewHolderTask extends BaseTask {
         mViewHolderHelperClassBuilder = TypeSpec.classBuilder("H")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         //通过id创建holder方法-----------------------------------------------------------
-        ClassName viewHolderType = ClassName.get("com.syiyi.library.MultiStyle", "ViewHolder");
+        ClassName viewHolderType = ClassName.get("com.syiyi.library", "MultiStyleHolder");
         ClassName paramViewGroup = ClassName.get("android.view", "ViewGroup");
         TypeVariableName returnType = TypeVariableName.get("T", viewHolderType);
         mMethodIdCreateHolderBuilder = MethodSpec.methodBuilder("createViewHolder")
@@ -61,11 +62,22 @@ class ViewHolderTask extends BaseTask {
                 .addParameter(String.class, "name")
                 .addTypeVariable(returnType)
                 .returns(returnType)
-                .addStatement("return createViewHolder(parent,$L.valueOf(name))", ClassName.get("java.lang", "Integer"));
+                .addStatement("return createViewHolder(parent,getIdByName(name))");
+
+        //通过name找到id
+        mMethodGetIdByNameBuilder = MethodSpec.methodBuilder("getIdByName")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .addParameter(String.class, "name")
+                .returns(int.class)
+                .beginControlFlow("if(name == null || name.trim().equals(\"\"))")
+                .addStatement("return -100000")
+                .endControlFlow();
+
 
         //生成id内部类
         mIdClassBuilder = TypeSpec.classBuilder("id")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
+
         //生成name内部类
         mNameClassBuilder = TypeSpec.classBuilder("name")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
@@ -89,7 +101,7 @@ class ViewHolderTask extends BaseTask {
             if (!name.equals("default")) {
                 FieldSpec nameField = FieldSpec.builder(String.class, name)
                         .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                        .initializer("$S", holderId)
+                        .initializer("$S", name)
                         .build();
                 mNameClassBuilder.addField(nameField);
             }
@@ -100,8 +112,15 @@ class ViewHolderTask extends BaseTask {
                     + (getOutClassName(annotatedElement) == null ? "" : getOutClassName(annotatedElement).replace("_", ".")), holderClassName);
             mMethodIdCreateHolderBuilder
                     .beginControlFlow("else if(viewType == " + "id." + getFieldName(annotatedElement) + ")")
-                    .addStatement("ViewHolder temp = new $T(new $T(parent.getContext()))", classHolder, classView)
+                    .addStatement("MultiStyleHolder temp = new $T(new $T(parent.getContext()))", classHolder, classView)
                     .addStatement("return (T)new $T($T.from(parent.getContext()).inflate(temp.getLayoutId(), parent, false))", classHolder, classLayoutInflate)
+                    .endControlFlow();
+
+            //通过name找到id的方法内的控制逻辑-------------------------------------------------------------
+
+            mMethodGetIdByNameBuilder
+                    .beginControlFlow("else if (name == \"" + name + "\")")
+                    .addStatement("return $L", holderId)
                     .endControlFlow();
         }
 
@@ -109,6 +128,10 @@ class ViewHolderTask extends BaseTask {
             if (isLoaded && !hasCreated) {
                 mMethodIdCreateHolderBuilder.beginControlFlow("else")
                         .addStatement("return null")
+                        .endControlFlow();
+
+                mMethodGetIdByNameBuilder.beginControlFlow("else")
+                        .addStatement("return -100000")
                         .endControlFlow();
                 //注入id类
                 TypeSpec idClassType = mIdClassBuilder.build();
@@ -119,8 +142,10 @@ class ViewHolderTask extends BaseTask {
                 //注入方法
                 MethodSpec idCreate = mMethodIdCreateHolderBuilder.build();
                 MethodSpec nameCreate = mMethodNameCreateHolderBuilder.build();
+                MethodSpec getIdByName = mMethodGetIdByNameBuilder.build();
                 mViewHolderHelperClassBuilder.addMethod(idCreate);
                 mViewHolderHelperClassBuilder.addMethod(nameCreate);
+                mViewHolderHelperClassBuilder.addMethod(getIdByName);
                 //生成文件
                 TypeSpec clazzHolderHelper = mViewHolderHelperClassBuilder.build();
                 JavaFile javaFile = JavaFile.builder("com.syiyi.holder", clazzHolderHelper)

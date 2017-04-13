@@ -1,10 +1,17 @@
 package com.syiyi.multistyle.holder;
 
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.syiyi.annotation.Holder;
-import com.syiyi.library.MultiStyle;
+import com.syiyi.library.MultiStyleAdapter;
+import com.syiyi.library.MultiStyleHolder;
 import com.syiyi.multistyle.MainActivity;
 import com.syiyi.multistyle.R;
+
+import java.util.List;
 
 /**
  * 图片
@@ -12,7 +19,7 @@ import com.syiyi.multistyle.R;
  */
 
 @Holder("fndsa")
-public class ImageHolder extends MultiStyle.ViewHolder {
+public class ImageHolder extends MultiStyleHolder {
 
     public ImageHolder(View itemView) {
         super(itemView);
@@ -29,10 +36,12 @@ public class ImageHolder extends MultiStyle.ViewHolder {
     }
 
     @Override
-    public void renderView(MultiStyle.IProxy proxy, int pos, MultiStyle.OnActionListener listener) {
-        MainActivity.Content item = (MainActivity.Content) proxy.getItem(pos);
-//        ImageView image = mHelper.getView(R.id.image);
-//        Glide.with(mHelper.getContext()).load(item.getContent()).into(image);
-
+    public void renderView(MultiStyleAdapter adapter, int position, List<Object> payloads, OnActionListener mListener) {
+        MainActivity.Content item = (MainActivity.Content) adapter.getItem(position);
+        ImageView image = (ImageView) itemView.findViewById(R.id.image);
+        Glide.with(mContext).load(item.getContent()).into(image);
+        TextView tv = (TextView) itemView.findViewById(R.id.text);
+        tv.setText(item.text);
     }
+
 }
