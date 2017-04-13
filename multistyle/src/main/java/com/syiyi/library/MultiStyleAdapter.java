@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -27,7 +28,8 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "MultiStyleRecycleSaveInstance";
     static final String TAG = "multiStyle";
     private static final String CLASS = "com.syiyi.holder.H";
-    private static final String METHOD = "createViewHolder";
+    private static final String METHOD_CREATE_HOLDER = "createViewHolder";
+    private static final String METHOD_GETIDBYNAME = "createViewHolder";
     protected Context mContext;
     private MultiStyleHolder.OnActionListener mListener;
     private int mDefaultHolderId = -100000;
@@ -36,6 +38,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private ViewHolderState viewHolderState = new ViewHolderState();
     private final BoundViewHolders boundViewHolders = new BoundViewHolders();
     private static Method mMethodCreate;
+    private static Method mMethodGetIdByName;
     private Map<String, Object> mTags = new HashMap<>();
     private List<T> mDatas = new ArrayList<>();
     static boolean enableDebug = false;
@@ -47,7 +50,8 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     static {
         try {
             Class helpClass = Class.forName(CLASS);
-            mMethodCreate = helpClass.getMethod(METHOD, ViewGroup.class, int.class);
+            mMethodCreate = helpClass.getMethod(METHOD_CREATE_HOLDER, ViewGroup.class, int.class);
+            mMethodGetIdByName = helpClass.getMethod(METHOD_GETIDBYNAME, String.class);
         } catch (Exception e) {
             throw new RuntimeException("no found H.class ! please rebuild projects");
         }
@@ -99,6 +103,13 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
         onBindViewHolder(holder, position, Collections.emptyList());
     }
 
+    private int getViewIdByName(String name) {
+        try {
+            return (int) mMethodGetIdByName.invoke(null, name);
+        } catch (Exception e) {
+            return -100000;
+        }
+    }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
@@ -219,9 +230,11 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
         int type;
         T viewModel = getItem(position);
         try {
-            type = viewModel.getViewTypeId();
-            if (type == -1) {
-                type = Integer.valueOf(viewModel.getViewTypeName());
+            String name = viewModel.getViewTypeName();
+            if (!TextUtils.isEmpty(name)) {
+                type = getViewIdByName(name);
+            } else {
+                type = viewModel.getViewTypeId();
             }
         } catch (Exception e) {
             throw new RuntimeException("item at position " + position + "->>" + e.getMessage());
