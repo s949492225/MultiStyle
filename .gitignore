@@ -39,8 +39,6 @@ captures/
 .idea/libraries
 .idea/modules.xml
 
-gradle.properties
-
 # Keystore files
 *.jks
 
