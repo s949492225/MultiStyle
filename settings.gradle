@@ -1,2 +1,5 @@
-include ':sample', ':multistyle-annotations', ':multistyle-compile', ':multistyle'
+include ':sample'
+include ':multistyle'
+include ':multistyle-annotations'
+include ':multistyle-compiler'
 rootProject.name = 'multistyle-parent'

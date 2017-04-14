@@ -29,7 +29,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     static final String TAG = "multiStyle";
     private static final String CLASS = "com.syiyi.holder.H";
     private static final String METHOD_CREATE_HOLDER = "createViewHolder";
-    private static final String METHOD_GETIDBYNAME = "createViewHolder";
+    private static final String METHOD_GETIDBYNAME = "getIdByName";
     protected Context mContext;
     private MultiStyleHolder.OnActionListener mListener;
     private int mDefaultHolderId = -100000;

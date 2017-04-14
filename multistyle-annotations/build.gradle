@@ -1,9 +1,10 @@
 apply plugin: 'java'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.s949492225'
+//apply plugin: 'com.github.dcendents.android-maven'
+//group = 'com.github.s949492225'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
+apply from: rootProject.file('gradle/maven-push.gradle')

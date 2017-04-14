@@ -12,8 +12,15 @@ buildscript {
 }
 
 allprojects {
+
+    group = GROUP_ID
+    version = VERSION_NAME
+
     repositories {
         jcenter()
+        maven {
+            url "http://45.62.110.28:8081/nexus/content/repositories/multistyle/"
+        }
     }
 
     tasks.withType(JavaCompile) {
