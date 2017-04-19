@@ -6,3 +6,9 @@
 2.去除findViewByID等冗余操作。
 
 3.去除编写adapter那些冗余逻辑，只需要编写proxy和holder即可快速的实现淘宝首页那样复杂的页面
+
+how to use
+
+    annotationProcessor 'com.syiyi:multistyle-compiler:1.0.1'
+    compile 'com.syiyi:multistyle-annotations:1.0.1'
+    compile 'com.syiyi:multistyle:1.0.1'
