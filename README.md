@@ -9,6 +9,10 @@
 
 how to use
 
+    maven {
+        url "http://45.62.110.28:8081/nexus/content/repositories/multistyle/"
+    }
+
     annotationProcessor 'com.syiyi:multistyle-compiler:1.0.1'
     compile 'com.syiyi:multistyle-annotations:1.0.1'
     compile 'com.syiyi:multistyle:1.0.1'
