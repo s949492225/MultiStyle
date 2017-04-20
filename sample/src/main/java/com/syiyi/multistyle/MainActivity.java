@@ -5,15 +5,12 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-
 import com.syiyi.holder.H;
 import com.syiyi.library.DiffHelper;
 import com.syiyi.library.MultiStyleAdapter;
 import com.syiyi.library.MultiViewModel;
 import com.syiyi.library.ViewHelper;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -69,18 +66,6 @@ public class MainActivity extends AppCompatActivity {
         list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         adapter = new MultiStyleAdapter<Content>() {};
         mDiffHelper=new DiffHelper<>(adapter);
-        mDiffHelper.setOperationListener(new DiffHelper.OnOperationListener(){
-            @Override
-            public void onStart() {
-                Log.d("xxxxxxxx", "onStart: ");
-            }
-
-            @Override
-            public void onComplete() {
-                Log.d("xxxxxxxx", "onComplete: ");
-            }
-        });
-
         MultiStyleAdapter.setDebug(true);
         list.setAdapter(adapter);
         mDiffHelper.setList(DATA);

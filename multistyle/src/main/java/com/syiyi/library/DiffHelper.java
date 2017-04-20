@@ -27,42 +27,6 @@ public class DiffHelper<T extends MultiViewModel> {
     private final int DATA_UPDATE_ONE = 0X0002;
     private final int DATA_UPDATE_LIST = 0X0003;
     private boolean isOperation;
-    private OnOperationListener mListener;
-
-    public abstract static class OnOperationListener {
-        boolean isActived = false;
-
-        void start() {
-            if (!isActived)
-                onStart();
-            isActived = true;
-        }
-
-        void complete() {
-            if (isActived)
-                onComplete();
-            isActived = false;
-        }
-
-        public abstract void onStart();
-
-        public abstract void onComplete();
-    }
-
-    public void setOperationListener(OnOperationListener listener) {
-        mListener = listener;
-    }
-
-
-    private void startOperation() {
-        if (mListener != null)
-            mListener.start();
-    }
-
-    private void completeOperation() {
-        if (mListener != null)
-            mListener.complete();
-    }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -75,11 +39,8 @@ public class DiffHelper<T extends MultiViewModel> {
             switch (msg.what) {
                 case DATA_SIZE_CHANGE:
                     diffResult = (DiffUtil.DiffResult) msg.obj;
-
                     diffResult.dispatchUpdatesTo(mAdapter);
                     mAdapter.setDataSource(mNewData);
-
-                    completeOperation();
                     break;
                 case DATA_UPDATE_ONE:
                     temp = (Object[]) msg.obj;
@@ -90,8 +51,6 @@ public class DiffHelper<T extends MultiViewModel> {
 
                     diffResult.dispatchUpdatesTo(mAdapter);
                     oldData.resetPlayLoadData(newData);
-
-                    completeOperation();
                     break;
                 case DATA_UPDATE_LIST:
                     temp = (Object[]) msg.obj;
@@ -107,8 +66,6 @@ public class DiffHelper<T extends MultiViewModel> {
                         newData = newDatas.get(i);
                         oldData.resetPlayLoadData(newData);
                     }
-
-                    completeOperation();
                     break;
             }
             isOperation = false;
@@ -140,7 +97,6 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public void setList(@NonNull List<T> datas) {
         if (checkMultiOperation()) return;
-        startOperation();
         mDatas.clear();
         insertList(datas);
     }
@@ -148,7 +104,6 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public void insertList(@NonNull List<T> datas) {
         if (checkMultiOperation()) return;
-        startOperation();
         mNewData = datas;
         datas.addAll(0, mDatas);
         notifyChange("insertList1");
@@ -157,7 +112,6 @@ public class DiffHelper<T extends MultiViewModel> {
     public void insertList(int index, @NonNull List<T> datas) {
         if (checkMultiOperation()) return;
         if (index < 0 || index > mDatas.size() - 1) return;
-        startOperation();
         List<T> temp = createNewDatas();
         temp.addAll(index, datas);
         mNewData = temp;
@@ -166,7 +120,6 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public void insertOne(@NonNull T data) {
         if (checkMultiOperation()) return;
-        startOperation();
         List<T> temp = new ArrayList<>();
         temp.add(data);
         insertList(temp);
@@ -174,7 +127,6 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public void insertOne(int index, @NonNull T data) {
         if (checkMultiOperation()) return;
-        startOperation();
         List<T> temp = new ArrayList<>();
         temp.add(data);
         insertList(index, temp);
@@ -186,7 +138,6 @@ public class DiffHelper<T extends MultiViewModel> {
         if (mDatas.size() == 0 || index < 0 || index > mDatas.size() - 1 || index + count > mDatas.size()) {
             return;
         }
-        startOperation();
         List<T> temp = createNewDatas();
         List<T> del = new ArrayList<>();
         int i = index;
@@ -201,7 +152,6 @@ public class DiffHelper<T extends MultiViewModel> {
     public void removeFirst() {
         if (checkMultiOperation()) return;
         if (mDatas.size() == 0) return;
-        startOperation();
         removeList(0, 1);
     }
 
@@ -209,7 +159,6 @@ public class DiffHelper<T extends MultiViewModel> {
         if (checkMultiOperation()) return;
         if (mDatas.size() == 0)
             return;
-        startOperation();
         removeList(mDatas.size() - 1, 1);
     }
 
@@ -217,7 +166,6 @@ public class DiffHelper<T extends MultiViewModel> {
         if (checkMultiOperation()) return;
         if (oldDatas.size() != newDatas.size() || oldDatas.size() == 0 || newDatas.size() == 0)
             return;
-        startOperation();
         mWorker.execute(new Runnable() {
             @Override
             public void run() {
@@ -248,7 +196,6 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public void updateOne(@NonNull final T oldData, @NonNull final T newData) {
         if (checkMultiOperation()) return;
-        startOperation();
         mWorker.execute(new Runnable() {
             @Override
             public void run() {
