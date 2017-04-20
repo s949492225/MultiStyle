@@ -31,7 +31,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.syiyi:multistyle-compiler:1.0.1'
-    compile 'com.syiyi:multistyle-annotations:1.0.1'
-    compile 'com.syiyi:multistyle:1.0.1'
+    annotationProcessor 'com.syiyi:multistyle-compiler:1.0.8'
+    compile 'com.syiyi:multistyle-annotations:1.0.8'
+    compile 'com.syiyi:multistyle:1.0.8'
 }
