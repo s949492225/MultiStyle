@@ -98,15 +98,15 @@ public class DiffHelper<T extends MultiViewModel> {
     public void setList(@NonNull List<T> datas) {
         if (checkMultiOperation()) return;
         mDatas.clear();
-        insertList(datas);
+        mDatas.addAll(datas);
+        mAdapter.notifyDataSetChanged();
     }
 
 
     public void insertList(@NonNull List<T> datas) {
         if (checkMultiOperation()) return;
-        mNewData = datas;
-        datas.addAll(0, mDatas);
-        notifyChange("insertList1");
+        mDatas.addAll(datas);
+        mAdapter.notifyDataSetChanged();
     }
 
     public void insertList(int index, @NonNull List<T> datas) {
