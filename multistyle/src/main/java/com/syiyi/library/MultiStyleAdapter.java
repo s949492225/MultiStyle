@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -123,8 +124,8 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
             if (payloads.isEmpty()) {
                 try {
                     viewHolder.clearView();
-                    viewHolderState.restore(viewHolder);
                     viewHolder.renderView(this, position, null, mListener);
+                    viewHolderState.restore(viewHolder);
                 } catch (Exception e) {
                     if (enableDebug) {
                         Log.e(TAG, "renderViewError:" + viewHolder.getClass().getSimpleName() + ":" + e.getMessage());
@@ -132,8 +133,8 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
                 }
             } else {
                 try {
-                    viewHolderState.restore(viewHolder);
                     viewHolder.renderView(this, position, payloads, mListener);
+                    viewHolderState.restore(viewHolder);
                 } catch (Exception e) {
                     if (enableDebug) {
                         Log.e(TAG, "renderViewPlayLoadError:" + viewHolder.getClass().getSimpleName() + ":" + e.getMessage());
