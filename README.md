@@ -3,7 +3,7 @@
 
 1.通过注解的方式方便的把ViewHolder注入到recycleView中。
 
-2.去除findViewByID等冗余操作。
+2.自动view状态保存，不用关心因为复用导致的view显示不正确。
 
 3.去除编写adapter那些冗余逻辑，只需要编写proxy和holder即可快速的实现淘宝首页那样复杂的页面
 
