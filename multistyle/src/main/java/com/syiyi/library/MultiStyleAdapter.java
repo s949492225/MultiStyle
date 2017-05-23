@@ -86,14 +86,14 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
         try {
             MultiStyleHolder holder = (MultiStyleHolder) mMethodCreate.invoke(null, parent, viewType);
             if (holder == null) {
-                ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(mContext).inflate(R.layout.holder_error, parent));
+                ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(mContext).inflate(R.layout.holder_error, parent, false));
                 errorHolder.setErrorId(viewType);
                 return errorHolder;
             }
             holder.setActivityOrFragment(mActivity, mFragment);
             return holder;
         } catch (Exception e) {
-            ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(mContext).inflate(R.layout.holder_error, parent));
+            ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(mContext).inflate(R.layout.holder_error, parent, false));
             errorHolder.setException(e);
             return errorHolder;
         }
