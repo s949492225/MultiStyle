@@ -16,7 +16,7 @@ public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
     protected Context mContext;
     protected Activity mActivity;
     protected Fragment mFragment;
-    private RecyclerView.Adapter mAdapter;
+    protected RecyclerView.Adapter mAdapter;
 
     public MultiStyleHolder(View itemView) {
         super(itemView);
