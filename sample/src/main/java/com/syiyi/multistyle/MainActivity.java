@@ -83,19 +83,16 @@ public class MainActivity extends AppCompatActivity {
 
         Content c3 = new Content(TYPE_TEXT, "今天好" + random.nextInt(1000));
 
-//        List<Content> temp = new ArrayList<>();
-////        temp.add(c1);
-////        temp.add(c2);
-//        for (int i=0;i<20;i++){
-//            Content a = new Content(TYPE_TEXT, "今天天气真好"+random.nextInt(1000) + random.nextInt(1000));
-//            temp.add(a);
-//        }
-//        //insert
-//        adapter.insertOne(c1);
-//        adapter.insertOne(1,c1);
-//        adapter.insertList(temp);
-//        mDiffHelper.insertList(6,temp);
-//
+        List<Content> temp = new ArrayList<>();
+//        temp.add(c1);
+//        temp.add(c2);
+        for (int i=0;i<20;i++){
+            Content a = new Content(TYPE_TEXT, "今天天气真好"+random.nextInt(1000) + random.nextInt(1000));
+            temp.add(a);
+        }
+        //insert
+        mDiffHelper.insertList(6,temp);
+
 //        //remove
 //        adapter.removeList(0, 1);
 //        adapter.removeList(0, 2);
@@ -104,21 +101,21 @@ public class MainActivity extends AppCompatActivity {
 //        adapter.removeLast();
 //
         //update
-        List<Content> newList = new ArrayList<>();
-        newList.add(c1);
-        newList.add(c3);
+//        List<Content> newList = new ArrayList<>();
+//        newList.add(c1);
+//        newList.add(c3);
+//
+//        //批量更新
+//        List<Content> oldList = new ArrayList<>();
+//        Content d1 = adapter.getItem(0);
+//        c1.id = d1.id;
+//        Content d2 = adapter.getItem(1);
+//        c3.id = d2.id;
+//
+//        oldList.add(d1);
+//        oldList.add(d2);
 
-        //批量更新
-        List<Content> oldList = new ArrayList<>();
-        Content d1 = adapter.getItem(0);
-        c1.id = d1.id;
-        Content d2 = adapter.getItem(1);
-        c3.id = d2.id;
-
-        oldList.add(d1);
-        oldList.add(d2);
-
-        mDiffHelper.updateList(oldList, newList);
+//        mDiffHelper.updateList(oldList, newList);
     }
 
     public static class Content implements MultiViewModel {

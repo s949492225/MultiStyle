@@ -16,6 +16,7 @@ public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
     protected Context mContext;
     protected Activity mActivity;
     protected Fragment mFragment;
+    private RecyclerView.Adapter mAdapter;
 
     public MultiStyleHolder(View itemView) {
         super(itemView);
@@ -53,6 +54,14 @@ public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
     }
 
     public void onViewDetachedFromWindow() {
+    }
+
+
+    public final long getViewStateKey() {
+        if (mAdapter == null) {
+            mAdapter = ((RecyclerView) itemView.getParent()).getAdapter();
+        }
+        return mAdapter.getItemId(getAdapterPosition());
     }
 
     public interface OnActionListener {
