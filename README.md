@@ -18,7 +18,7 @@ how to use
     compile 'com.syiyi:multistyle:1.0.4'
     
 ```
-public class Activi extends Activity{`
+public class Activi extends Activity{
     static List<Content> DATA = new ArrayList<>();
     static final int TYPE_TEXT = H.id.TextHolder_com_syiyi_multistyle_holder;
     static final int TYPE_IMAGE = H.id.ImageHolder_com_syiyi_multistyle_holder;
