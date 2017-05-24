@@ -76,7 +76,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     }
 
     public MultiStyleAdapter() {
-//        setHasStableIds(true);
+        setHasStableIds(true);
     }
 
     @Override

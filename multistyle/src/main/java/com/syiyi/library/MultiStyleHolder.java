@@ -59,7 +59,7 @@ public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
 
 
     public final long getViewStateKey() {
-        return mAdapter.getItemId(mPos);
+        return getItemId();
     }
 
     public interface OnActionListener {

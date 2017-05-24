@@ -79,6 +79,8 @@ class ViewHolderState extends LongSparseArray<ViewHolderState.ViewState> impleme
         // exact same view type is being saved to it, which
         // should have identical ids for all its views, and will just overwrite the previous state.
         long id = holder.getViewStateKey();
+        if (id == -1)
+            return;
         if (BuildConfig.DEBUG) {
             Log.d("multiStyle:save:", id + "");
         }
@@ -100,6 +102,8 @@ class ViewHolderState extends LongSparseArray<ViewHolderState.ViewState> impleme
             return;
         }
         long id = holder.getViewStateKey();
+        if (id == -1)
+            return;
         ViewState state = get(id);
         if (BuildConfig.DEBUG) {
             Log.d("multiStyle:restore:", id + "");

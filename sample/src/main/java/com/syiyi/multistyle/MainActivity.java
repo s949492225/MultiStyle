@@ -6,11 +6,13 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
 import com.syiyi.holder.H;
 import com.syiyi.library.DiffHelper;
 import com.syiyi.library.MultiStyleAdapter;
 import com.syiyi.library.MultiViewModel;
 import com.syiyi.library.ViewHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -64,8 +66,10 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView list = mHelper.getView(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        adapter = new MultiStyleAdapter<Content>() {};
-        mDiffHelper=new DiffHelper<>(adapter);
+        adapter = new MultiStyleAdapter<Content>() {
+        };
+        adapter.setHasStableIds(true);
+        mDiffHelper = new DiffHelper<>(adapter);
         MultiStyleAdapter.setDebug(true);
         list.setAdapter(adapter);
         mDiffHelper.setList(DATA);
@@ -86,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
         List<Content> temp = new ArrayList<>();
 //        temp.add(c1);
 //        temp.add(c2);
-        for (int i=0;i<20;i++){
-            Content a = new Content(TYPE_TEXT, "今天天气真好"+random.nextInt(1000) + random.nextInt(1000));
+        for (int i = 0; i < 2; i++) {
+            Content a = new Content(TYPE_TEXT, "今天天气真好" + random.nextInt(1000) + random.nextInt(1000));
             temp.add(a);
         }
         //insert
-        mDiffHelper.insertList(6,temp);
+        mDiffHelper.insertList(6, temp);
 
 //        //remove
 //        adapter.removeList(0, 1);
