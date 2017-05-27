@@ -41,7 +41,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private static Method mMethodCreate;
     private static Method mMethodGetIdByName;
     private Map<String, Object> mTags = new HashMap<>();
-    private List<T> mDatas = new ArrayList<>();
+    protected List<T> mDatas = new ArrayList<>();
     static boolean enableDebug = false;
 
     public static void setDebug(boolean enableDebug) {
@@ -121,7 +121,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
         if (holder instanceof MultiStyleHolder) {
             MultiStyleHolder viewHolder = (MultiStyleHolder) holder;
             viewHolder.mAdapter = this;
-            viewHolder.mPos=position;
+            viewHolder.mPos = position;
             if (payloads.isEmpty()) {
                 try {
                     viewHolder.clearView();
@@ -254,8 +254,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     }
 
     public void setDataSource(List<T> datas) {
-        mDatas.clear();
-        mDatas.addAll(datas);
+        mDatas = datas;
     }
 
 
