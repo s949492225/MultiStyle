@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             temp.add(a);
         }
         //insert
-        mDiffHelper.insertList(6, temp);
+        mDiffHelper.insertList(temp);
 
 //        //remove
 //        adapter.removeList(0, 1);
