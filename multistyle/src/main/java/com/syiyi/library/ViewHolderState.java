@@ -78,7 +78,7 @@ class ViewHolderState extends LongSparseArray<ViewHolderState.ViewState> impleme
         // Reuse the previous sparse array if available. We shouldn't need to clear it since the
         // exact same view type is being saved to it, which
         // should have identical ids for all its views, and will just overwrite the previous state.
-        long id = holder.getViewStateKey();
+        long id = holder.getItemId();
         if (id == -1)
             return;
         if (BuildConfig.DEBUG) {
@@ -101,7 +101,7 @@ class ViewHolderState extends LongSparseArray<ViewHolderState.ViewState> impleme
         if (!holder.shouldSaveViewState()) {
             return;
         }
-        long id = holder.getViewStateKey();
+        long id = holder.getItemId();
         if (id == -1)
             return;
         ViewState state = get(id);

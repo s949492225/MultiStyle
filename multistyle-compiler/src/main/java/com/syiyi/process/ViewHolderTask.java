@@ -119,7 +119,7 @@ class ViewHolderTask extends BaseTask {
             //通过name找到id的方法内的控制逻辑-------------------------------------------------------------
 
             mMethodGetIdByNameBuilder
-                    .beginControlFlow("else if (name == \"" + name + "\")")
+                    .beginControlFlow("else if (name.equals( \"" + name + "\"))")
                     .addStatement("return $L", holderId)
                     .endControlFlow();
         }

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity {
     static List<Content> DATA = new ArrayList<>();
     static final int TYPE_TEXT = H.id.TextHolder_com_syiyi_multistyle_holder;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -10,5 +11,6 @@
         android:layout_height="45dp"
         android:background="#96ff6d"
         android:focusableInTouchMode="true"
-        android:hint="请输入文字" />
+        android:hint="请输入文字"
+        tools:ignore="HardcodedText" />
 </LinearLayout>

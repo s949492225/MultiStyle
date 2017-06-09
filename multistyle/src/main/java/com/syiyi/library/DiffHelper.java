@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  * Created by songlintao on 2017/4/11.
  */
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings("ALL")
 public class DiffHelper<T extends MultiViewModel> {
     private MultiStyleAdapter mAdapter;
     private List<T> mDatas;

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">MultiStyle</string>
-    <string name="text">text:</string>
+    <string name="text" tools:ignore="UnusedResources">text:</string>
 </resources>

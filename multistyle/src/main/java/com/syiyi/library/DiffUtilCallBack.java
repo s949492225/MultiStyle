@@ -10,6 +10,7 @@ import java.util.List;
  * Created by Dell on 2017/4/11.
  */
 
+@SuppressWarnings("ALL")
 public class DiffUtilCallBack<T extends MultiViewModel> extends DiffUtil.Callback {
 
     private List<T> mOldDatas;

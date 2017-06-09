@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:background="#fa2553"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    tools:ignore="Overdraw">
 
     <TextView
         android:id="@+id/msg"

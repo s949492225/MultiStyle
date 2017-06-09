@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +22,7 @@ import java.util.Map;
  * 通过的adapter
  * Created by Dell on 2017/4/11.
  */
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings("All")
 public abstract class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "MultiStyleRecycleSaveInstance";
@@ -120,8 +119,6 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
         }
         if (holder instanceof MultiStyleHolder) {
             MultiStyleHolder viewHolder = (MultiStyleHolder) holder;
-            viewHolder.mAdapter = this;
-            viewHolder.mPos = position;
             if (payloads.isEmpty()) {
                 try {
                     viewHolder.clearView();
@@ -155,8 +152,9 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
         if (holder instanceof MultiStyleHolder) {
             MultiStyleHolder viewHolder = (MultiStyleHolder) holder;
-
             viewHolderState.save(viewHolder);
+            viewHolder.onViewRecycled();
+
             boundViewHolders.remove(viewHolder);
         }
     }

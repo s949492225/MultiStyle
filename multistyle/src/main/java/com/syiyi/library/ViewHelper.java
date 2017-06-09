@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
  * Created by songlintao on 16/10/13.
  */
 
+@SuppressWarnings("ALL")
 public class ViewHelper {
     private View mContentView;
     private Context mContext;

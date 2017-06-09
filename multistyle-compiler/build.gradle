@@ -9,6 +9,8 @@ dependencies {
     compile project(':multistyle-annotations')
 }
 
+//noinspection GroovyUnusedAssignment
 sourceCompatibility = "1.7"
+//noinspection GroovyUnusedAssignment
 targetCompatibility = "1.7"
 apply from: rootProject.file('gradle/maven-push.gradle')

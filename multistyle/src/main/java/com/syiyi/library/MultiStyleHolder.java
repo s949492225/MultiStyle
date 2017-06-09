@@ -11,13 +11,12 @@ import java.util.List;
 /**
  * 仅能在RecycleView中使用
  */
+@SuppressWarnings("All")
 public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
     protected View mContentView;
     protected Context mContext;
     protected Activity mActivity;
     protected Fragment mFragment;
-    protected RecyclerView.Adapter mAdapter;
-    protected int mPos;
 
     public MultiStyleHolder(View itemView) {
         super(itemView);
@@ -57,10 +56,10 @@ public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
     public void onViewDetachedFromWindow() {
     }
 
+    public void onViewRecycled() {
 
-    public final long getViewStateKey() {
-        return getItemId();
     }
+
 
     public interface OnActionListener {
         void onClick(View view, int pos, MultiStyleAdapter adapter, Object... extras);
