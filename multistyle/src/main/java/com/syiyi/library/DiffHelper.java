@@ -91,6 +91,10 @@ public class DiffHelper<T extends MultiViewModel> {
         return temp;
     }
 
+    @NonNull
+    public List<T> getDataSource() {
+        return mAdapter.getDataSource();
+    }
 
     public void setList(@NonNull List<T> datas) {
         mDatas.clear();
