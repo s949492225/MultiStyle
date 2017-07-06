@@ -48,7 +48,7 @@ public class DiffHelper<T extends MultiViewModel> {
                 case DATA_SIZE_CHANGE:
                     diffResult = (DiffUtil.DiffResult) msg.obj;
                     diffResult.dispatchUpdatesTo(mAdapter);
-                    mAdapter.setDataSource(mNewData);
+                    setDataSource(mNewData);
                     break;
                 case DATA_UPDATE_ONE:
                     temp = (Object[]) msg.obj;
@@ -79,6 +79,12 @@ public class DiffHelper<T extends MultiViewModel> {
             mLock.unlock();
         }
     };
+
+    private void setDataSource(List<T> datas) {
+        mAdapter.getDataSource().clear();
+        mAdapter.getDataSource().addAll(datas);
+    }
+
 
     public DiffHelper(MultiStyleAdapter adapter) {
         this.mAdapter = adapter;
