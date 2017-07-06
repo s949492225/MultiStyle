@@ -29,6 +29,12 @@ public class DiffHelper<T extends MultiViewModel> {
     private final int DATA_UPDATE_ONE = 0X0002;
     private final int DATA_UPDATE_LIST = 0X0003;
     private Lock mLock = new ReentrantLock();
+    private boolean mEableMultiThread = false;
+
+
+    public void setEableMultiThread(boolean eableMultiThread) {
+        mEableMultiThread = eableMultiThread;
+    }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -165,7 +171,7 @@ public class DiffHelper<T extends MultiViewModel> {
     public void updateList(@NonNull final List<T> oldDatas, @NonNull final List<T> newDatas) {
         if (oldDatas.size() != newDatas.size() || oldDatas.size() == 0 || newDatas.size() == 0)
             return;
-        mWorker.execute(new Runnable() {
+        work(new Runnable() {
             @Override
             public void run() {
                 new WorkInvoker("updateList") {
@@ -186,7 +192,7 @@ public class DiffHelper<T extends MultiViewModel> {
                         Message message = mHandler.obtainMessage();
                         message.what = DATA_UPDATE_LIST;
                         message.obj = new Object[]{diffResult, oldDatas, newDatas};
-                        mHandler.sendMessage(message);
+                        sendMessage(message);
                     }
                 }.run();
             }
@@ -194,7 +200,7 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
     public void updateOne(@NonNull final T oldData, @NonNull final T newData) {
-        mWorker.execute(new Runnable() {
+        work(new Runnable() {
             @Override
             public void run() {
                 new WorkInvoker("updateOne") {
@@ -208,11 +214,10 @@ public class DiffHelper<T extends MultiViewModel> {
 
                         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(mDatas, temp), true);
 
-
                         Message message = mHandler.obtainMessage();
                         message.what = DATA_UPDATE_ONE;
                         message.obj = new Object[]{diffResult, oldData, newData};
-                        mHandler.sendMessage(message);
+                        sendMessage(message);
                     }
                 }.run();
 
@@ -222,12 +227,20 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
     public void batchOperate(@NonNull final List<T> newData) {
-        this.mDatas = newData;
+        this.mNewData = newData;
         executeChange("batchOperate");
     }
 
+    public MultiStyleAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    public void notifyAllDataChange() {
+        mAdapter.notifyDataSetChanged();
+    }
+
     private void executeChange(final String action) {
-        mWorker.execute(new Runnable() {
+        work(new Runnable() {
             @Override
             public void run() {
                 new WorkInvoker(action) {
@@ -237,13 +250,29 @@ public class DiffHelper<T extends MultiViewModel> {
                         Message message = mHandler.obtainMessage();
                         message.what = DATA_SIZE_CHANGE;
                         message.obj = diffResult;
-                        mHandler.sendMessage(message);
+                        sendMessage(message);
                     }
                 }.run();
 
             }
         });
 
+    }
+
+    public void sendMessage(Message msg) {
+        if (mEableMultiThread) {
+            mHandler.sendMessage(msg);
+        } else {
+            mHandler.handleMessage(msg);
+        }
+    }
+
+    public void work(Runnable runnable) {
+        if (mEableMultiThread) {
+            work(runnable);
+        } else {
+            runnable.run();
+        }
     }
 
     abstract class WorkInvoker {
