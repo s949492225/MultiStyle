@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 数据比对工具类
@@ -26,7 +28,7 @@ public class DiffHelper<T extends MultiViewModel> {
     private final int DATA_SIZE_CHANGE = 0X0001;
     private final int DATA_UPDATE_ONE = 0X0002;
     private final int DATA_UPDATE_LIST = 0X0003;
-    private boolean isOperation;
+    private Lock mLock = new ReentrantLock();
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -68,7 +70,7 @@ public class DiffHelper<T extends MultiViewModel> {
                     }
                     break;
             }
-            isOperation = false;
+            mLock.unlock();
         }
     };
 
@@ -83,20 +85,14 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
     @NonNull
-    private List<T> createNewDatas() {
+    public List<T> createNewDatas() {
         List<T> temp = new ArrayList<>();
         temp.addAll(mAdapter.getDataSource());
         return temp;
     }
 
-    private boolean checkMultiOperation() {
-        if (isOperation && MultiStyleAdapter.enableDebug)
-            Log.d(MultiStyleAdapter.TAG, "isOperation");
-        return isOperation;
-    }
 
     public void setList(@NonNull List<T> datas) {
-        if (checkMultiOperation()) return;
         mDatas.clear();
         mDatas.addAll(datas);
         mAdapter.notifyDataSetChanged();
@@ -104,30 +100,32 @@ public class DiffHelper<T extends MultiViewModel> {
 
 
     public void insertList(@NonNull List<T> datas) {
-        if (checkMultiOperation()) return;
         int start = mDatas.size();
         mDatas.addAll(datas);
         mAdapter.notifyItemRangeInserted(start, datas.size());
     }
 
     public void insertList(int index, @NonNull List<T> datas) {
-        if (checkMultiOperation()) return;
         if (index < 0 || index > mDatas.size() - 1) return;
         List<T> temp = createNewDatas();
         temp.addAll(index, datas);
         mNewData = temp;
-        notifyChange("insertList2");
+        executeChange("insertList2");
     }
 
-    public void insertOne(@NonNull T data) {
-        if (checkMultiOperation()) return;
+    public void insertLast(@NonNull T data) {
         List<T> temp = new ArrayList<>();
         temp.add(data);
         insertList(temp);
     }
 
+    public void insertFirst(@NonNull T data) {
+        List<T> temp = new ArrayList<>();
+        temp.add(0, data);
+        insertList(0, temp);
+    }
+
     public void insertOne(int index, @NonNull T data) {
-        if (checkMultiOperation()) return;
         List<T> temp = new ArrayList<>();
         temp.add(data);
         insertList(index, temp);
@@ -135,7 +133,6 @@ public class DiffHelper<T extends MultiViewModel> {
 
 
     public void removeList(int index, int count) {
-        if (checkMultiOperation()) return;
         if (mDatas.size() == 0 || index < 0 || index > mDatas.size() - 1 || index + count > mDatas.size()) {
             return;
         }
@@ -147,30 +144,27 @@ public class DiffHelper<T extends MultiViewModel> {
         }
         temp.removeAll(del);
         mNewData = temp;
-        notifyChange("removeList2");
+        executeChange("removeList2");
     }
 
     public void removeFirst() {
-        if (checkMultiOperation()) return;
         if (mDatas.size() == 0) return;
         removeList(0, 1);
     }
 
     public void removeLast() {
-        if (checkMultiOperation()) return;
         if (mDatas.size() == 0)
             return;
         removeList(mDatas.size() - 1, 1);
     }
 
     public void updateList(@NonNull final List<T> oldDatas, @NonNull final List<T> newDatas) {
-        if (checkMultiOperation()) return;
         if (oldDatas.size() != newDatas.size() || oldDatas.size() == 0 || newDatas.size() == 0)
             return;
         mWorker.execute(new Runnable() {
             @Override
             public void run() {
-                new trackDiffInvokeTime("updateList") {
+                new WorkInvoker("updateList") {
                     @Override
                     void invoke() {
                         List<T> temp = createNewDatas();
@@ -196,11 +190,10 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
     public void updateOne(@NonNull final T oldData, @NonNull final T newData) {
-        if (checkMultiOperation()) return;
         mWorker.execute(new Runnable() {
             @Override
             public void run() {
-                new trackDiffInvokeTime("updateOne") {
+                new WorkInvoker("updateOne") {
                     @Override
                     void invoke() {
                         List<T> temp = createNewDatas();
@@ -224,11 +217,16 @@ public class DiffHelper<T extends MultiViewModel> {
 
     }
 
-    private void notifyChange(final String action) {
+    public void batchOperate(@NonNull final List<T> newData) {
+        this.mDatas = newData;
+        executeChange("batchOperate");
+    }
+
+    private void executeChange(final String action) {
         mWorker.execute(new Runnable() {
             @Override
             public void run() {
-                new trackDiffInvokeTime(action) {
+                new WorkInvoker(action) {
                     @Override
                     void invoke() {
                         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(mDatas, mNewData), true);
@@ -244,25 +242,25 @@ public class DiffHelper<T extends MultiViewModel> {
 
     }
 
-    abstract class trackDiffInvokeTime {
+    abstract class WorkInvoker {
         private String name;
 
         abstract void invoke();
 
-        trackDiffInvokeTime(String name) {
+        WorkInvoker(String name) {
             this.name = name;
         }
 
         void run() {
-            isOperation = true;
             long startTime = 0;
             if (MultiStyleAdapter.enableDebug) {
                 startTime = System.currentTimeMillis();
 
             }
+            mLock.lock();
             invoke();
             if (MultiStyleAdapter.enableDebug) {
-                Log.d(MultiStyleAdapter.TAG, "trackDiffInvokeTime-" + name + ":" + +(System.currentTimeMillis() - startTime));
+                Log.d(MultiStyleAdapter.TAG, "WorkInvoker-" + name + ":" + +(System.currentTimeMillis() - startTime));
             }
         }
     }
