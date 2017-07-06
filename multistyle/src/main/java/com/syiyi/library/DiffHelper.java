@@ -263,7 +263,7 @@ public class DiffHelper<T extends MultiViewModel> {
         if (mEableMultiThread) {
             mHandler.sendMessage(msg);
         } else {
-            mHandler.handleMessage(msg);
+            mHandler.dispatchMessage(msg);
         }
     }
 

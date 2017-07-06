@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ViewHelper mHelper = new ViewHelper(this.getWindow().getDecorView().findViewById(android.R.id.content), this);
         RecyclerView list = mHelper.getView(R.id.list);
-        list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         adapter = new MultiStyleAdapter<Content>() {
         };
@@ -96,7 +96,10 @@ public class MainActivity extends AppCompatActivity {
             temp.add(a);
         }
         //insert
-        mDiffHelper.insertList(temp);
+        mDiffHelper.insertList(0,temp);
+//        List<Content> newDatas = mDiffHelper.createNewDatas();
+//        newDatas.addAll(temp);
+//        mDiffHelper.batchOperate(newDatas);
 
 //        //remove
 //        adapter.removeList(0, 1);
