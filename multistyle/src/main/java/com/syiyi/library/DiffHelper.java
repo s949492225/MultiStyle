@@ -122,12 +122,11 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
     public void insertList(int index, @NonNull List<T> datas) {
-        if(index >= 0 && index <= this.mDatas.size() - 1) {
-            List<T> temp = this.createNewDatas();
-            temp.addAll(index, datas);
-            this.mNewData = temp;
-            this.executeChange("insertList2");
-        }
+        if (index < 0 || (index > 0 & index > mDatas.size() - 1)) return;
+        List<T> temp = createNewDatas();
+        temp.addAll(index, datas);
+        mNewData = temp;
+        executeChange("insertList2");
     }
 
     public void insertLast(@NonNull T data) {
