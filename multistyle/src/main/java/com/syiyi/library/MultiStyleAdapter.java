@@ -124,6 +124,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
             MultiStyleHolder viewHolder = (MultiStyleHolder) holder;
             if (payloads.isEmpty()) {
                 try {
+                    mIdMap.put(getItemId(position), getItem(position));
                     viewHolder.clearView();
                     viewHolder.renderView(this, position, null, mListener);
                     viewHolderState.restore(viewHolder);
