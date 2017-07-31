@@ -232,6 +232,14 @@ public class DiffHelper<T extends MultiViewModel> {
 
     }
 
+    public T getItemById(long id) {
+        return (T) getAdapter().getItemById(id);
+    }
+
+    public int getItemPosById(long id) {
+        return getAdapter().getItemPosById(id);
+    }
+
     public void batchOperate(@NonNull final List<T> newData) {
         this.mNewData = newData;
         executeChange("batchOperate");
@@ -275,7 +283,7 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public void work(Runnable runnable) {
         if (mEableMultiThread) {
-            work(runnable);
+            mWorker.execute(runnable);
         } else {
             runnable.run();
         }

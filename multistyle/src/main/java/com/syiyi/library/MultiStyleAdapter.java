@@ -9,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +42,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private static Method mMethodCreate;
     private static Method mMethodGetIdByName;
     private Map<String, Object> mTags = new HashMap<>();
+    private LongSparseArray<T> mIdMap = new LongSparseArray();
     protected List<T> mDatas = new ArrayList<>();
     static boolean enableDebug = false;
 
@@ -131,6 +134,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
                 }
             } else {
                 try {
+                    mIdMap.put(getItemId(position), getItem(position));
                     viewHolder.renderView(this, position, payloads, mListener);
                     viewHolderState.restore(viewHolder);
                 } catch (Exception e) {
@@ -146,6 +150,14 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
                 Log.d(TAG, "onBindViewHolder: pos>>" + position + "time>>" + (System.currentTimeMillis() - startTime) + ">>" + holder.getClass().getSimpleName());
             }
         }
+    }
+
+    public T getItemById(long id) {
+        return mIdMap.get(id);
+    }
+
+    public int getItemPosById(long id) {
+        return getDataSource().indexOf(getItemById(id));
     }
 
     @Override
