@@ -9,10 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +40,6 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private static Method mMethodCreate;
     private static Method mMethodGetIdByName;
     private Map<String, Object> mTags = new HashMap<>();
-    private LongSparseArray<T> mIdMap = new LongSparseArray();
     protected List<T> mDatas = new ArrayList<>();
     static boolean enableDebug = false;
 
@@ -124,7 +121,6 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
             MultiStyleHolder viewHolder = (MultiStyleHolder) holder;
             if (payloads.isEmpty()) {
                 try {
-                    mIdMap.put(getItemId(position), getItem(position));
                     viewHolder.clearView();
                     viewHolder.renderView(this, position, null, mListener);
                     viewHolderState.restore(viewHolder);
@@ -135,7 +131,6 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
                 }
             } else {
                 try {
-                    mIdMap.put(getItemId(position), getItem(position));
                     viewHolder.renderView(this, position, payloads, mListener);
                     viewHolderState.restore(viewHolder);
                 } catch (Exception e) {
@@ -154,11 +149,21 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     }
 
     public T getItemById(long id) {
-        return mIdMap.get(id);
+        List<T> dataSource = getDataSource();
+        for (T a : dataSource) {
+            if (a.hashCode() == id)
+                return a;
+        }
+        return null;
     }
 
     public int getItemPosById(long id) {
-        return getDataSource().indexOf(getItemById(id));
+        List<T> dataSource = getDataSource();
+        T a = getItemById(id);
+        if (a != null)
+            return dataSource.indexOf(a);
+        else
+            return -1;
     }
 
     @Override

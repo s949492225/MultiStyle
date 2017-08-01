@@ -233,11 +233,12 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
     public T getItemById(long id) {
-        return (T) getAdapter().getItemById(id);
+
+        return (T) mAdapter.getItemById(id);
     }
 
     public int getItemPosById(long id) {
-        return getAdapter().getItemPosById(id);
+        return mAdapter.getItemPosById(id);
     }
 
     public void batchOperate(@NonNull final List<T> newData) {
