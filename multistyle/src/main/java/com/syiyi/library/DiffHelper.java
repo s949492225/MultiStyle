@@ -117,16 +117,13 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public void insertList(@NonNull List<T> datas) {
         int start = mDatas.size();
-        mDatas.addAll(datas);
-        mAdapter.notifyItemRangeInserted(start, datas.size());
+        insertList(start, datas);
     }
 
     public void insertList(int index, @NonNull List<T> datas) {
-        if (index < 0 || (index > 0 & index > mDatas.size() - 1)) return;
-        List<T> temp = createNewDatas();
-        temp.addAll(index, datas);
-        mNewData = temp;
-        executeChange("insertList2");
+        if (index < 0 || (index > 0 & index > mDatas.size())) return;
+        mDatas.addAll(index, datas);
+        mAdapter.notifyItemRangeInserted(index, datas.size());
     }
 
     public void insertLast(@NonNull T data) {
@@ -152,15 +149,8 @@ public class DiffHelper<T extends MultiViewModel> {
         if (mDatas.size() == 0 || index < 0 || index > mDatas.size() - 1 || index + count > mDatas.size()) {
             return;
         }
-        List<T> temp = createNewDatas();
-        List<T> del = new ArrayList<>();
-        int i = index;
-        for (; i < index + count; i++) {
-            del.add(temp.get(i));
-        }
-        temp.removeAll(del);
-        mNewData = temp;
-        executeChange("removeList2");
+        mDatas.subList(index, index + count).clear();
+        mAdapter.notifyItemRangeRemoved(index, count);
     }
 
     public void removeFirst() {
@@ -230,6 +220,13 @@ public class DiffHelper<T extends MultiViewModel> {
             }
         });
 
+    }
+
+    public void updateOneStraight(int pos, Object playLoad) {
+        if (playLoad == null)
+            mAdapter.notifyItemChanged(pos);
+        else
+            mAdapter.notifyItemChanged(pos, playLoad);
     }
 
     public T getItemById(long id) {

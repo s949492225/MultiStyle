@@ -92,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
 //        temp.add(c1);
 //        temp.add(c2);
         for (int i = 0; i < 2; i++) {
-            Content a = new Content(TYPE_TEXT, "今天天气真好" + random.nextInt(1000) + random.nextInt(1000));
+            Content a = new Content(TYPE_TEXT, i + "气真好" + random.nextInt(1000) + random.nextInt(1000));
             temp.add(a);
         }
         //insert
-        mDiffHelper.insertList(0,temp);
+        mDiffHelper.removeList(mDiffHelper.getDataSource().size() - 1, 1);
 //        List<Content> newDatas = mDiffHelper.createNewDatas();
 //        newDatas.addAll(temp);
 //        mDiffHelper.batchOperate(newDatas);
