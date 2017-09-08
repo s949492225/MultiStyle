@@ -13,9 +13,9 @@ how to use
         url "http://45.62.110.28:8081/nexus/content/repositories/multistyle/"
     }
 
-    annotationProcessor 'com.syiyi:multistyle-compiler:1.0.4'
-    compile 'com.syiyi:multistyle-annotations:1.0.4'
-    compile 'com.syiyi:multistyle:1.0.4'
+    annotationProcessor 'com.syiyi:multistyle-compiler:1.3.0'
+    compile 'com.syiyi:multistyle-annotations:1.3.0'
+    compile 'com.syiyi:multistyle:1.3.0'
     
 ```
 public class Activi extends Activity{
