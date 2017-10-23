@@ -41,7 +41,16 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private static Method mMethodGetIdByName;
     private Map<String, Object> mTags = new HashMap<>();
     protected List<T> mDatas = new ArrayList<>();
+    protected RecyclerView.RecycledViewPool mChildRecycledViewPool=new RecyclerView.RecycledViewPool();
     static boolean enableDebug = false;
+
+    public RecyclerView.RecycledViewPool getChildRecycledViewPool() {
+        return mChildRecycledViewPool;
+    }
+
+    public void setChildRecycledViewPool(RecyclerView.RecycledViewPool childRecycledViewPool) {
+        this.mChildRecycledViewPool = childRecycledViewPool;
+    }
 
     public static void setDebug(boolean enableDebug) {
         MultiStyleAdapter.enableDebug = enableDebug;
