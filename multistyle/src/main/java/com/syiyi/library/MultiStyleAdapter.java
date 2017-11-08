@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +42,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     private static Method mMethodGetIdByName;
     private Map<String, Object> mTags = new HashMap<>();
     protected List<T> mDatas = new ArrayList<>();
-    protected RecyclerView.RecycledViewPool mChildRecycledViewPool=new RecyclerView.RecycledViewPool();
+    protected RecyclerView.RecycledViewPool mChildRecycledViewPool = new RecyclerView.RecycledViewPool();
     static boolean enableDebug = false;
 
     public RecyclerView.RecycledViewPool getChildRecycledViewPool() {
@@ -238,7 +239,7 @@ public abstract class MultiStyleAdapter<T extends MultiViewModel> extends Recycl
     }
 
     public void setDefaultHolderName(String holderName) {
-        mDefaultHolderId = Integer.valueOf(holderName);
+        mDefaultHolderId = getViewIdByName(holderName);
     }
 
     @Override
