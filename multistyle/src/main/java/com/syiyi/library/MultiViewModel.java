@@ -9,12 +9,4 @@ public interface MultiViewModel {
     int getViewTypeId();
 
     String getViewTypeName();
-
-    boolean areContentsTheSame(MultiViewModel newModel);
-
-    Object getChangePayload(MultiViewModel newModel);
-
-    boolean areItemsTheSame(MultiViewModel newModel);
-
-    void resetPlayLoadData(MultiViewModel newModel);
 }

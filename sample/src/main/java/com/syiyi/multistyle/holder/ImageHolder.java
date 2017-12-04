@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide;
 import com.syiyi.annotation.Holder;
 import com.syiyi.library.MultiStyleAdapter;
 import com.syiyi.library.MultiStyleHolder;
-import com.syiyi.multistyle.MainActivity;
+import com.syiyi.multistyle.Content;
 import com.syiyi.multistyle.R;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class ImageHolder extends MultiStyleHolder {
 
     @Override
     public void renderView(MultiStyleAdapter adapter, int position, List<Object> payloads, OnActionListener mListener) {
-        MainActivity.Content item = (MainActivity.Content) adapter.getItem(position);
+        Content item = (Content) adapter.getItem(position);
         ImageView image = (ImageView) itemView.findViewById(R.id.image);
         Glide.with(mContext).load(item.getContent()).into(image);
         TextView tv = (TextView) itemView.findViewById(R.id.text);

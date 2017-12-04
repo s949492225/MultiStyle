@@ -8,6 +8,7 @@ import android.support.v7.util.DiffUtil;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +22,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @SuppressWarnings("ALL")
 public class DiffHelper<T extends MultiViewModel> {
-    private MultiStyleAdapter mAdapter;
+    private MultiStyleAdapter<T> mAdapter;
     private List<T> mDatas;
     private List<T> mNewData;
     private ExecutorService mWorker = Executors.newSingleThreadExecutor();
@@ -30,6 +31,7 @@ public class DiffHelper<T extends MultiViewModel> {
     private final int DATA_UPDATE_LIST = 0X0003;
     private Lock mLock = new ReentrantLock();
     private boolean mEableMultiThread = false;
+    private DiffUtilCallBack mDiffCallBack;
 
 
     public void setEableMultiThread(boolean eableMultiThread) {
@@ -58,7 +60,7 @@ public class DiffHelper<T extends MultiViewModel> {
                     newData = (T) temp[2];
 
                     diffResult.dispatchUpdatesTo(mAdapter);
-                    oldData.resetPlayLoadData(newData);
+                    Collections.replaceAll(mDatas, oldData, newData);
                     break;
                 case DATA_UPDATE_LIST:
                     temp = (Object[]) msg.obj;
@@ -72,7 +74,7 @@ public class DiffHelper<T extends MultiViewModel> {
                     for (int i = 0; i < oldDatas.size(); i++) {
                         oldData = oldDatas.get(i);
                         newData = newDatas.get(i);
-                        oldData.resetPlayLoadData(newData);
+                        Collections.replaceAll(mDatas, oldData, newData);
                     }
                     break;
             }
@@ -86,9 +88,10 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
 
-    public DiffHelper(MultiStyleAdapter adapter) {
+    public DiffHelper(MultiStyleAdapter<T> adapter, DiffUtilCallBack diffCallBack) {
         this.mAdapter = adapter;
         mDatas = mAdapter.getDataSource();
+        mDiffCallBack = diffCallBack;
     }
 
     public void onDestory() {
@@ -183,7 +186,7 @@ public class DiffHelper<T extends MultiViewModel> {
                             temp.set(index, newData);
                         }
 
-                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(mDatas, temp), true);
+                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mDiffCallBack.loadData(mDatas, temp), true);
 
                         Message message = mHandler.obtainMessage();
                         message.what = DATA_UPDATE_LIST;
@@ -208,7 +211,7 @@ public class DiffHelper<T extends MultiViewModel> {
                             throw new RuntimeException("updateOne:" + "oldData not found in oldList");
                         temp.set(index, newData);
 
-                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(mDatas, temp), true);
+                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mDiffCallBack.loadData(mDatas, temp), true);
 
                         Message message = mHandler.obtainMessage();
                         message.what = DATA_UPDATE_ONE;
@@ -231,7 +234,12 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public T getItemById(long id) {
 
-        return (T) mAdapter.getItemById(id);
+        return mAdapter.getItemById(id);
+    }
+
+    public T getItemByPos(int pos) {
+
+        return mAdapter.getItem(pos);
     }
 
     public int getItemPosById(long id) {
@@ -258,7 +266,7 @@ public class DiffHelper<T extends MultiViewModel> {
                 new WorkInvoker(action) {
                     @Override
                     void invoke() {
-                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallBack(mDatas, mNewData), true);
+                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mDiffCallBack.loadData(mDatas, mNewData), true);
                         Message message = mHandler.obtainMessage();
                         message.what = DATA_SIZE_CHANGE;
                         message.obj = diffResult;

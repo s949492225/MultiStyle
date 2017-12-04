@@ -6,7 +6,7 @@ import android.widget.EditText;
 import com.syiyi.annotation.Holder;
 import com.syiyi.library.MultiStyleAdapter;
 import com.syiyi.library.MultiStyleHolder;
-import com.syiyi.multistyle.MainActivity;
+import com.syiyi.multistyle.Content;
 import com.syiyi.multistyle.R;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class TextHolder extends MultiStyleHolder {
     public void renderView(MultiStyleAdapter adapter, int position, List<Object> payloads, OnActionListener mListener) {
 
         text = (EditText) itemView.findViewById(R.id.et);
-        MainActivity.Content content = (MainActivity.Content) adapter.getItem(position);
+        Content content = (Content) adapter.getItem(position);
         if (payloads != null) {
             text.setHint((String) payloads.get(0));
         } else {

@@ -24,7 +24,7 @@ import java.util.Map;
  * Created by Dell on 2017/4/11.
  */
 @SuppressWarnings("All")
-public abstract class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "MultiStyleRecycleSaveInstance";
     static final String TAG = "multiStyle";

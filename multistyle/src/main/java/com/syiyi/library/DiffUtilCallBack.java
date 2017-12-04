@@ -11,14 +11,15 @@ import java.util.List;
  */
 
 @SuppressWarnings("ALL")
-public class DiffUtilCallBack<T extends MultiViewModel> extends DiffUtil.Callback {
+public abstract class DiffUtilCallBack<T extends MultiViewModel> extends DiffUtil.Callback {
 
-    private List<T> mOldDatas;
-    private List<T> mNewDatas;
+    protected List<T> mOldDatas;
+    protected List<T> mNewDatas;
 
-    public DiffUtilCallBack(List<T> oldDatas, List<T> newDatas) {
+    public DiffUtilCallBack loadData(List<T> oldDatas, List<T> newDatas) {
         mOldDatas = oldDatas;
         mNewDatas = newDatas;
+        return this;
     }
 
     @Override
@@ -33,23 +34,25 @@ public class DiffUtilCallBack<T extends MultiViewModel> extends DiffUtil.Callbac
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        T oldModel = mOldDatas.get(oldItemPosition);
-        T newModel = mNewDatas.get(newItemPosition);
-        return oldModel.areItemsTheSame(newModel) ;
+        return areItemsTheSame(mOldDatas.get(oldItemPosition), mNewDatas.get(newItemPosition));
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        T oldModel = mOldDatas.get(oldItemPosition);
-        T newModel = mNewDatas.get(newItemPosition);
-        return oldModel.areContentsTheSame(newModel);
+        return areContentsTheSame(mOldDatas.get(oldItemPosition), mNewDatas.get(newItemPosition));
     }
 
     @Nullable
     @Override
     public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-        T oldModel = mOldDatas.get(oldItemPosition);
-        T newModel = mNewDatas.get(newItemPosition);
-        return oldModel.getChangePayload(newModel);
+        return getChangePayload(mOldDatas.get(oldItemPosition), mNewDatas.get(newItemPosition));
+    }
+
+    public abstract boolean areContentsTheSame(T oldModel, T newModel);
+
+    public abstract Object getChangePayload(T oldModel, T newModel);
+
+    public boolean areItemsTheSame(T oldModel, T newModel) {
+        return oldModel.hashCode() == newModel.hashCode();
     }
 }
