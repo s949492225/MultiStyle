@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 数据比对工具类
@@ -29,7 +27,7 @@ public class DiffHelper<T extends MultiViewModel> {
     private final int DATA_SIZE_CHANGE = 0X0001;
     private final int DATA_UPDATE_ONE = 0X0002;
     private final int DATA_UPDATE_LIST = 0X0003;
-    private Lock mLock = new ReentrantLock();
+    private boolean isRuning = false;
     private boolean mEableMultiThread = false;
     private DiffUtilCallBack mDiffCallBack;
 
@@ -78,11 +76,13 @@ public class DiffHelper<T extends MultiViewModel> {
                     }
                     break;
             }
-            mLock.unlock();
+            isRuning = false;
         }
     };
 
     private void setDataSource(List<T> datas) {
+        if (datas == null)
+            throw new RuntimeException("数据异常");
         mAdapter.getDataSource().clear();
         mAdapter.getDataSource().addAll(datas);
     }
@@ -112,6 +112,7 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
     public void setList(@NonNull List<T> datas) {
+        if (datas == null) throw new RuntimeException("数据异常");
         mDatas.clear();
         mDatas.addAll(datas);
         mAdapter.notifyDataSetChanged();
@@ -119,29 +120,36 @@ public class DiffHelper<T extends MultiViewModel> {
 
 
     public void insertList(@NonNull List<T> datas) {
+        if (datas == null) throw new RuntimeException("数据异常");
         int start = mDatas.size();
         insertList(start, datas);
     }
 
     public void insertList(int index, @NonNull List<T> datas) {
-        if (index < 0 || (index > 0 & index > mDatas.size())) return;
+        if (index < 0 || (index > 0 & index > mDatas.size())) throw new RuntimeException("数据异常");
         mDatas.addAll(index, datas);
         mAdapter.notifyItemRangeInserted(index, datas.size());
     }
 
     public void insertLast(@NonNull T data) {
+        if (data == null)
+            throw new RuntimeException("数据异常");
         List<T> temp = new ArrayList<>();
         temp.add(data);
         insertList(temp);
     }
 
     public void insertFirst(@NonNull T data) {
+        if (data == null)
+            throw new RuntimeException("数据异常");
         List<T> temp = new ArrayList<>();
         temp.add(0, data);
         insertList(0, temp);
     }
 
     public void insertOne(int index, @NonNull T data) {
+        if (index < 0 || data == null)
+            throw new RuntimeException("数据异常");
         List<T> temp = new ArrayList<>();
         temp.add(data);
         insertList(index, temp);
@@ -150,26 +158,30 @@ public class DiffHelper<T extends MultiViewModel> {
 
     public void removeList(int index, int count) {
         if (mDatas.size() == 0 || index < 0 || index > mDatas.size() - 1 || index + count > mDatas.size()) {
-            return;
+            throw new RuntimeException("数据异常");
         }
         mDatas.subList(index, index + count).clear();
         mAdapter.notifyItemRangeRemoved(index, count);
     }
 
     public void removeFirst() {
-        if (mDatas.size() == 0) return;
+        if (mDatas.size() == 0) throw new RuntimeException("数据异常");
         removeList(0, 1);
     }
 
     public void removeLast() {
         if (mDatas.size() == 0)
-            return;
+            throw new RuntimeException("数据异常");
         removeList(mDatas.size() - 1, 1);
     }
 
+    //后台线程处理的部分======begin
     public void updateList(@NonNull final List<T> oldDatas, @NonNull final List<T> newDatas) {
-        if (oldDatas.size() != newDatas.size() || oldDatas.size() == 0 || newDatas.size() == 0)
+        if (oldDatas.size() != newDatas.size() || oldDatas.size() == 0 || newDatas.size() == 0 )
+            throw new RuntimeException("数据异常或者有任务正在执行");
+        if (isRuning)
             return;
+        isRuning = true;
         work(new Runnable() {
             @Override
             public void run() {
@@ -199,6 +211,11 @@ public class DiffHelper<T extends MultiViewModel> {
     }
 
     public void updateOne(@NonNull final T oldData, @NonNull final T newData) {
+        if (oldData == null || newData == null)
+            throw new RuntimeException("数据异常或者有任务正在执行");
+        if (isRuning)
+            return;
+        isRuning = true;
         work(new Runnable() {
             @Override
             public void run() {
@@ -225,11 +242,42 @@ public class DiffHelper<T extends MultiViewModel> {
 
     }
 
+    public void batchOperate(@NonNull final List<T> newData) {
+        if (newData == null)
+            throw new RuntimeException("数据异常或者有任务正在执行");
+        if (isRuning)
+            return;
+        isRuning = true;
+        this.mNewData = newData;
+        work(new Runnable() {
+            @Override
+            public void run() {
+                new WorkInvoker("batchOperate") {
+                    @Override
+                    void invoke() {
+                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mDiffCallBack.loadData(mDatas, mNewData), true);
+                        Message message = mHandler.obtainMessage();
+                        message.what = DATA_SIZE_CHANGE;
+                        message.obj = diffResult;
+                        sendMessage(message);
+                    }
+                }.run();
+
+            }
+        });
+    }
+
+    //后台线程处理的部分======end
+
     public void updateOneStraight(int pos, Object playLoad) {
         if (playLoad == null)
             mAdapter.notifyItemChanged(pos);
         else
             mAdapter.notifyItemChanged(pos, playLoad);
+    }
+
+    public boolean isWorking() {
+        return isRuning;
     }
 
     public T getItemById(long id) {
@@ -246,37 +294,12 @@ public class DiffHelper<T extends MultiViewModel> {
         return mAdapter.getItemPosById(id);
     }
 
-    public void batchOperate(@NonNull final List<T> newData) {
-        this.mNewData = newData;
-        executeChange("batchOperate");
-    }
-
     public MultiStyleAdapter getAdapter() {
         return mAdapter;
     }
 
     public void notifyAllDataChange() {
         mAdapter.notifyDataSetChanged();
-    }
-
-    private void executeChange(final String action) {
-        work(new Runnable() {
-            @Override
-            public void run() {
-                new WorkInvoker(action) {
-                    @Override
-                    void invoke() {
-                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(mDiffCallBack.loadData(mDatas, mNewData), true);
-                        Message message = mHandler.obtainMessage();
-                        message.what = DATA_SIZE_CHANGE;
-                        message.obj = diffResult;
-                        sendMessage(message);
-                    }
-                }.run();
-
-            }
-        });
-
     }
 
     public void sendMessage(Message msg) {
@@ -310,7 +333,6 @@ public class DiffHelper<T extends MultiViewModel> {
                 startTime = System.currentTimeMillis();
 
             }
-            mLock.lock();
             invoke();
             if (MultiStyleAdapter.enableDebug) {
                 Log.d(MultiStyleAdapter.TAG, "WorkInvoker-" + name + ":" + +(System.currentTimeMillis() - startTime));
