@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @Holder("fndsa")
-public class ImageHolder extends MultiStyleHolder {
+public class ImageHolder extends MultiStyleHolder<Content> {
 
     public ImageHolder(View itemView) {
         super(itemView);
@@ -36,8 +36,7 @@ public class ImageHolder extends MultiStyleHolder {
     }
 
     @Override
-    public void renderView(MultiStyleAdapter adapter, int position, List<Object> payloads, OnActionListener mListener) {
-        Content item = (Content) adapter.getItem(position);
+    public void renderView(MultiStyleAdapter adapter, Content item, List<Object> payloads, OnActionListener mListener) {
         ImageView image = (ImageView) itemView.findViewById(R.id.image);
         Glide.with(mContext).load(item.getContent()).into(image);
         TextView tv = (TextView) itemView.findViewById(R.id.text);

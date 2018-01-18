@@ -12,7 +12,7 @@ import java.util.List;
  * 仅能在RecycleView中使用
  */
 @SuppressWarnings("All")
-public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
+public abstract class MultiStyleHolder<T> extends RecyclerView.ViewHolder {
     protected View mContentView;
     protected Context mContext;
     protected Activity mActivity;
@@ -44,7 +44,7 @@ public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
 
     public abstract void clearView();
 
-    public abstract void renderView(MultiStyleAdapter adapter, int position, List<Object> payloads, OnActionListener mListener);
+    public abstract void renderView(MultiStyleAdapter adapter, T model, List<Object> payloads, OnActionListener mListener);
 
     public boolean shouldSaveViewState() {
         return false;
@@ -61,9 +61,9 @@ public abstract class MultiStyleHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public interface OnActionListener {
-        void onClick(View view, int pos, MultiStyleAdapter adapter, Object... extras);
+    public interface OnActionListener<T> {
+        void onClick(View view, T model, MultiStyleAdapter adapter, Object... extras);
 
-        void onLongClick(View view, int pos, MultiStyleAdapter adapter, Object... extras);
+        void onLongClick(View view, T model, MultiStyleAdapter adapter, Object... extras);
     }
 }

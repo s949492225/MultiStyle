@@ -16,7 +16,7 @@ import java.util.List;
  * Created by songlintao on 2017/1/19.
  */
 @Holder("text")
-public class TextHolder extends MultiStyleHolder {
+public class TextHolder extends MultiStyleHolder<Content> {
     private EditText text;
 
     public TextHolder(View itemView) {
@@ -35,10 +35,9 @@ public class TextHolder extends MultiStyleHolder {
     }
 
     @Override
-    public void renderView(MultiStyleAdapter adapter, int position, List<Object> payloads, OnActionListener mListener) {
+    public void renderView(MultiStyleAdapter adapter, Content content, List<Object> payloads, OnActionListener mListener) {
 
         text = (EditText) itemView.findViewById(R.id.et);
-        Content content = (Content) adapter.getItem(position);
         if (payloads != null) {
             text.setHint((String) payloads.get(0));
         } else {
