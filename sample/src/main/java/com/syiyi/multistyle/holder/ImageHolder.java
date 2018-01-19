@@ -36,7 +36,7 @@ public class ImageHolder extends MultiStyleHolder<Content> {
     }
 
     @Override
-    public void renderView(MultiStyleAdapter adapter, Content item, List<Object> payloads, OnActionListener mListener) {
+    public void renderView(MultiStyleAdapter adapter, Content item, List<Object> payloads, OnActionListener<Content> mListener) {
         ImageView image = (ImageView) itemView.findViewById(R.id.image);
         Glide.with(mContext).load(item.getContent()).into(image);
         TextView tv = (TextView) itemView.findViewById(R.id.text);

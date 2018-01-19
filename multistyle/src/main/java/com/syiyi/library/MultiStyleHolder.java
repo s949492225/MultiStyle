@@ -44,7 +44,7 @@ public abstract class MultiStyleHolder<T> extends RecyclerView.ViewHolder {
 
     public abstract void clearView();
 
-    public abstract void renderView(MultiStyleAdapter adapter, T model, List<Object> payloads, OnActionListener mListener);
+    public abstract void renderView(MultiStyleAdapter adapter, T model, List<Object> payloads, OnActionListener<T> mListener);
 
     public boolean shouldSaveViewState() {
         return false;
