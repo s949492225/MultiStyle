@@ -63,7 +63,7 @@ public class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Ad
 
     public void setEableMultiThread(boolean enableMultiThread) {
         mEnableMultiThread = enableMultiThread;
-        mWorker=enableMultiThread?Executors.newSingleThreadExecutor():null;
+        mWorker = enableMultiThread ? Executors.newSingleThreadExecutor() : null;
     }
 
     @NonNull
@@ -166,13 +166,14 @@ public class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Ad
 
     public void onDestory() {
         mHandler.removeCallbacksAndMessages(null);
-        mWorker.shutdownNow();
+        if (mWorker != null) {
+            mWorker.shutdownNow();
+        }
     }
 
     @Override
-    public
     @NonNull
-    RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         try {
             MultiStyleHolder holder = (MultiStyleHolder) mMethodCreate.invoke(null, parent, viewType);
             if (holder == null) {
@@ -338,6 +339,10 @@ public class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Ad
 
     public void setOnClickListener(@NonNull MultiStyleHolder.OnActionListener<T> listener) {
         mListener = listener;
+    }
+
+    public void setDataSource(List<T> dataSource) {
+        mDatas = dataSource;
     }
 
     public List<T> getDataSource() {
