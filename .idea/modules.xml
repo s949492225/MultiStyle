@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/multistyle-annotations/multistyle-annotations.iml" filepath="$PROJECT_DIR$/multistyle-annotations/multistyle-annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/multistyle-compiler/multistyle-compiler.iml" filepath="$PROJECT_DIR$/multistyle-compiler/multistyle-compiler.iml" />
       <module fileurl="file://$PROJECT_DIR$/multistyle-parent.iml" filepath="$PROJECT_DIR$/multistyle-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mylibrary/mylibrary.iml" filepath="$PROJECT_DIR$/mylibrary/mylibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>

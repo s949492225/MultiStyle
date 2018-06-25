@@ -9,6 +9,7 @@ import com.squareup.javapoet.TypeVariableName;
 import com.syiyi.annotation.Holder;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -31,6 +32,7 @@ class ViewHolderTask extends BaseTask {
     private MethodSpec.Builder mMethodGetIdByNameBuilder;
     private boolean hasCreated;
     private int mMinId = 10000;
+    private String mPrefix = "";
 
     ViewHolderTask(ProcessingEnvironment processingEnv) {
         super(processingEnv);
@@ -38,8 +40,15 @@ class ViewHolderTask extends BaseTask {
     }
 
     private void init() {
+        //解析前缀
+
+        Map<String, String> map = processingEnv.getOptions();
+        if (map != null && map.containsKey("prefix")) {
+            mPrefix = map.get("prefix");
+        }
+
         //创建类-----------------------------------------------------------
-        mViewHolderHelperClassBuilder = TypeSpec.classBuilder("H")
+        mViewHolderHelperClassBuilder = TypeSpec.classBuilder("H" + mPrefix)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         //通过id创建holder方法-----------------------------------------------------------
         ClassName viewHolderType = ClassName.get("com.syiyi.library", "MultiStyleHolder");

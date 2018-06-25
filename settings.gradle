@@ -1,4 +1,4 @@
-include ':sample'
+include ':sample', ':mylibrary'
 include ':multistyle'
 include ':multistyle-annotations'
 include ':multistyle-compiler'

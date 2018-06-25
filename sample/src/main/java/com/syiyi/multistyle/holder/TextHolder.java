@@ -35,7 +35,7 @@ public class TextHolder extends MultiStyleHolder<Content> {
     }
 
     @Override
-    public void renderView(MultiStyleAdapter adapter, Content content, List<Object> payloads, OnActionListener mListener) {
+    public void renderView(MultiStyleAdapter adapter, Content content, List<Object> payloads, OnActionListener<Content> mListener) {
 
         text = (EditText) itemView.findViewById(R.id.et);
         if (payloads != null) {

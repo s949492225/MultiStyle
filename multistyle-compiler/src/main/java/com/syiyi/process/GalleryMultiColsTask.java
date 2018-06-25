@@ -7,6 +7,7 @@ import com.squareup.javapoet.TypeSpec;
 import com.syiyi.annotation.ColumnCount;
 import com.syiyi.annotation.Holder;
 
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -21,6 +22,8 @@ import javax.lang.model.element.TypeElement;
  */
 
 class GalleryMultiColsTask extends BaseTask {
+    private String mPrefix = "";
+
     GalleryMultiColsTask(ProcessingEnvironment processingEnv) {
         super(processingEnv);
     }
@@ -28,8 +31,16 @@ class GalleryMultiColsTask extends BaseTask {
     @Override
     public void process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (!isLoaded) {
+
+            //解析前缀
+
+            Map<String, String> map = processingEnv.getOptions();
+            if (map != null && map.containsKey("prefix")) {
+                mPrefix = map.get("prefix");
+            }
+
             ClassName classView = ClassName.get("android.view", "View");
-            TypeSpec.Builder classGalleryBuilder = TypeSpec.classBuilder("GalleryColsHolders");
+            TypeSpec.Builder classGalleryBuilder = TypeSpec.classBuilder("GalleryColsHolders" + mPrefix);
             classGalleryBuilder
                     .addModifiers(Modifier.PUBLIC)
                     .addModifiers(Modifier.FINAL);

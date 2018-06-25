@@ -1,7 +1,6 @@
 package com.syiyi.library;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,18 +33,17 @@ public class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Ad
 
     private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "MultiStyleRecycleSaveInstance";
     static final String TAG = "multiStyle";
-    private static final String CLASS = "com.syiyi.holder.H";
+    private String mClass = "com.syiyi.holder.H";
     private static final String METHOD_CREATE_HOLDER = "createViewHolder";
     private static final String METHOD_GETIDBYNAME = "getIdByName";
-    protected Context mContext;
     private MultiStyleHolder.OnActionListener<T> mListener;
     private int mDefaultHolderId = -100000;
     protected Activity mActivity;
     protected Fragment mFragment;
     private ViewHolderState viewHolderState = new ViewHolderState();
     private final BoundViewHolders boundViewHolders = new BoundViewHolders();
-    private static Method mMethodCreate;
-    private static Method mMethodGetIdByName;
+    private Method mMethodCreate;
+    private Method mMethodGetIdByName;
     private Map<String, Object> mTags = new HashMap<>();
     protected List<T> mDatas = new ArrayList<>();
     protected RecyclerView.RecycledViewPool mChildRecycledViewPool = new RecyclerView.RecycledViewPool();
@@ -60,6 +58,62 @@ public class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Ad
     private boolean mEnableMultiThread = false;
     private DiffUtilCallBack mDiffCallBack;
     static boolean enableDebug = false;
+
+
+    public MultiStyleAdapter(@Nullable String prefix) {
+        setHasStableIds(true);
+        initPrefix(prefix);
+        initInvoker();
+    }
+
+    public MultiStyleAdapter(@NonNull Activity activity, @Nullable String prefix) {
+        setHasStableIds(true);
+        mActivity = activity;
+        initPrefix(prefix);
+        initInvoker();
+    }
+
+    public MultiStyleAdapter(@NonNull Fragment fragment, @Nullable String prefix) {
+        setHasStableIds(true);
+        mFragment = fragment;
+        initPrefix(prefix);
+        initInvoker();
+    }
+
+    public MultiStyleAdapter(@NonNull Activity activity) {
+        setHasStableIds(true);
+        mActivity = activity;
+        initInvoker();
+    }
+
+    public MultiStyleAdapter(@NonNull Fragment fragment) {
+        setHasStableIds(true);
+        mFragment = fragment;
+        initInvoker();
+    }
+
+    public MultiStyleAdapter() {
+        setHasStableIds(true);
+        initInvoker();
+    }
+
+
+    private void initPrefix(String prefix) {
+        if (!TextUtils.isEmpty(prefix)) {
+            mClass += prefix;
+        }
+    }
+
+    private void initInvoker() {
+        try {
+            Class helpClass = Class.forName(mClass);
+            mMethodCreate = helpClass.getMethod(METHOD_CREATE_HOLDER, ViewGroup.class, int.class);
+            mMethodGetIdByName = helpClass.getMethod(METHOD_GETIDBYNAME, String.class);
+        } catch (Exception e) {
+            throw new RuntimeException("no found H.class ! please rebuild projects");
+        }
+    }
+
 
     public void setEableMultiThread(boolean enableMultiThread) {
         mEnableMultiThread = enableMultiThread;
@@ -129,37 +183,6 @@ public class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Ad
         MultiStyleAdapter.enableDebug = enableDebug;
     }
 
-    static {
-        try {
-            Class helpClass = Class.forName(CLASS);
-            mMethodCreate = helpClass.getMethod(METHOD_CREATE_HOLDER, ViewGroup.class, int.class);
-            mMethodGetIdByName = helpClass.getMethod(METHOD_GETIDBYNAME, String.class);
-        } catch (Exception e) {
-            throw new RuntimeException("no found H.class ! please rebuild projects");
-        }
-    }
-
-    public MultiStyleAdapter(@NonNull Context context) {
-        this();
-        mContext = context;
-    }
-
-    public MultiStyleAdapter(@NonNull Activity activity) {
-        this();
-        mContext = activity;
-        mActivity = activity;
-    }
-
-    public MultiStyleAdapter(@NonNull Fragment fragment) {
-        this();
-        mContext = fragment.getContext();
-        mFragment = fragment;
-    }
-
-    public MultiStyleAdapter() {
-        setHasStableIds(true);
-    }
-
     public void setDiffCallBack(DiffUtilCallBack diffCallBack) {
         mDiffCallBack = diffCallBack;
     }
@@ -177,14 +200,14 @@ public class MultiStyleAdapter<T extends MultiViewModel> extends RecyclerView.Ad
         try {
             MultiStyleHolder holder = (MultiStyleHolder) mMethodCreate.invoke(null, parent, viewType);
             if (holder == null) {
-                ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(mContext).inflate(R.layout.holder_error, parent, false));
+                ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.holder_error, parent, false));
                 errorHolder.setErrorId(viewType);
                 return errorHolder;
             }
             holder.setActivityOrFragment(mActivity, mFragment);
             return holder;
         } catch (Exception e) {
-            ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(mContext).inflate(R.layout.holder_error, parent, false));
+            ErrorHolder errorHolder = new ErrorHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.holder_error, parent, false));
             errorHolder.setException(e);
             return errorHolder;
         }
