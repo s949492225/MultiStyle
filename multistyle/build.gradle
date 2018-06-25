@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.s949492225.multistyle'
+group = 'com.github.s949492225.multistyle.multistyle'
 android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
